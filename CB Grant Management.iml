@@ -4153,6 +4153,15 @@
                       <option name="wildcard" value="false" />
                     </MetadataType>
                     <MetadataType>
+                      <option name="entries">
+                        <list>
+                          <MetadataEntry>
+                            <option name="folder" value="true" />
+                            <option name="name" value="cbFundBudget" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                        </list>
+                      </option>
                       <option name="name" value="LightningComponentBundle" />
                     </MetadataType>
                     <MetadataType>

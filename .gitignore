@@ -1,0 +1,161 @@
+/.idea/
+/IlluminatedCloud/CB_Grant_Management/
+/src/flexipages/ContactCenter_UtilityBar.flexipage
+/src/flexipages/CrisisCenter_UtilityBar.flexipage
+/src/flexipages/LightningSales_UtilityBar.flexipage
+/src/flexipages/LightningSalesConsole_UtilityBar.flexipage
+/src/flexipages/LightningService_UtilityBar.flexipage
+/src/flexipages/RevenueCloudConsole_UtilityBar.flexipage
+/src/layouts/Account-Account %28Marketing%29 Layout.layout
+/src/layouts/Account-Account %28Sales%29 Layout.layout
+/src/layouts/Account-Account %28Support%29 Layout.layout
+/src/layouts/Account-Account Layout.layout
+/src/layouts/AlternativePaymentMethod-Alternative Payment Method Layout.layout
+/src/layouts/ApiAnomalyEventStore-API Anomaly Event Store Layout.layout
+/src/layouts/AppointmentInvitation-Appointment Invitation Layout.layout
+/src/layouts/Asset-Asset Layout.layout
+/src/layouts/AssetAction-Asset Action Layout.layout
+/src/layouts/AssetActionSource-Asset Action Source Layout.layout
+/src/layouts/AssetRelationship-Asset Relationship Layout.layout
+/src/layouts/AssetStatePeriod-Asset State Period Layout.layout
+/src/layouts/AssignedResource-Assigned Resource Layout.layout
+/src/layouts/AuthorizationForm-Authorization Form Layout.layout
+/src/layouts/AuthorizationFormConsent-Authorization Form Consent Layout.layout
+/src/layouts/AuthorizationFormDataUse-Authorization Form Data Use Layout.layout
+/src/layouts/AuthorizationFormText-Authorization Form Text Layout.layout
+/src/layouts/BusinessBrand-Business Brand Layout.layout
+/src/layouts/Campaign-Campaign Layout.layout
+/src/layouts/CampaignMember-Campaign Member Page Layout.layout
+/src/layouts/CardPaymentMethod-Card Payment Method Layout.layout
+/src/layouts/CartCheckoutSession-Cart Checkout Session Layout.layout
+/src/layouts/CartDeliveryGroup-Cart Delivery Group Layout.layout
+/src/layouts/CartDeliveryGroupMethod-Cart Delivery Group Method Layout.layout
+/src/layouts/CartItem-Cart Item Layout.layout
+/src/layouts/CartTax-Cart Tax Layout.layout
+/src/layouts/CartValidationOutput-Cart Validation Output Layout.layout
+/src/layouts/Case-Case %28Marketing%29 Layout.layout
+/src/layouts/Case-Case %28Sales%29 Layout.layout
+/src/layouts/Case-Case %28Support%29 Layout.layout
+/src/layouts/Case-Case Layout.layout
+/src/layouts/CaseClose-Close Case Layout.layout
+/src/layouts/CaseMilestone-Case Milestone Layout.layout
+/src/layouts/CommunityMemberLayout-Community Member Layout.layout
+/src/layouts/ConsumptionRate-Consumption Rate Layout.layout
+/src/layouts/ConsumptionSchedule-Consumption Schedule Layout.layout
+/src/layouts/Contact-Contact %28Marketing%29 Layout.layout
+/src/layouts/Contact-Contact %28Sales%29 Layout.layout
+/src/layouts/Contact-Contact %28Support%29 Layout.layout
+/src/layouts/Contact-Contact Layout.layout
+/src/layouts/ContactPointAddress-Contact Point Address Layout.layout
+/src/layouts/ContactPointEmail-Contact Point Email Layout.layout
+/src/layouts/ContactPointPhone-Contact Point Phone Layout.layout
+/src/layouts/ContactPointTypeConsent-Contact Point Type Consent Layout.layout
+/src/layouts/ContentVersion-Content Version Layout.layout
+/src/layouts/Contract-Contract Layout.layout
+/src/layouts/ContractLineItem-Contract Line Item Layout.layout
+/src/layouts/CredentialStuffingEventStore-Credential Stuffing Event Store Layout.layout
+/src/layouts/CreditMemo-Credit Memo Layout.layout
+/src/layouts/CreditMemoInvApplication-Credit Memo Invoice Application Layout.layout
+/src/layouts/CreditMemoLine-Credit Memo Line Layout.layout
+/src/layouts/Customer-Customer Layout.layout
+/src/layouts/DandBCompany-D%26B Company Layout.layout
+/src/layouts/DataUseLegalBasis-Data Use Legal Basis Layout.layout
+/src/layouts/DataUsePurpose-Data Use Purpose Layout.layout
+/src/layouts/DigitalWallet-Digital Wallet Layout.layout
+/src/layouts/DuplicateRecordSet-Duplicate Record Set Layout.layout
+/src/layouts/EmailMessage-Email Message Layout.layout
+/src/layouts/EngagementChannelType-Engagement Channel Type Layout.layout
+/src/layouts/Entitlement-Entitlement Layout.layout
+/src/layouts/EntityMilestone-Object Milestone Layout.layout
+/src/layouts/Event-Event Layout.layout
+/src/layouts/FeedItem-Feed Item Layout.layout
+/src/layouts/FinanceBalanceSnapshot-Finance Balance Snapshot Layout.layout
+/src/layouts/FinanceTransaction-Finance Transaction Layout.layout
+/src/layouts/Global-Global Layout.layout
+/src/layouts/Idea-Idea Layout.layout
+/src/layouts/Individual-Individual Layout.layout
+/src/layouts/Invoice-Invoice Layout.layout
+/src/layouts/InvoiceLine-Invoice Line Layout.layout
+/src/layouts/Lead-Lead %28Marketing%29 Layout.layout
+/src/layouts/Lead-Lead %28Sales%29 Layout.layout
+/src/layouts/Lead-Lead %28Support%29 Layout.layout
+/src/layouts/Lead-Lead Layout.layout
+/src/layouts/LegalEntity-Legal Entity Layout.layout
+/src/layouts/Macro-Macro Layout.layout
+/src/layouts/Order-Order Layout.layout
+/src/layouts/OrderItem-Order Product Layout.layout
+/src/layouts/Payment-Payment Layout.layout
+/src/layouts/PaymentAuthAdjustment-Payment Authorization Adjustment Layout.layout
+/src/layouts/PaymentAuthorization-Payment Authorization Layout.layout
+/src/layouts/PaymentGateway-Payment Gateway Layout.layout
+/src/layouts/PaymentGatewayLog-Payment Gateway Log Layout.layout
+/src/layouts/PaymentGroup-Payment Group Layout.layout
+/src/layouts/PaymentLineInvoice-Payment Line Invoice Layout.layout
+/src/layouts/Pricebook2-Price Book Layout.layout
+/src/layouts/PricebookEntry-Price Book Entry Layout.layout
+/src/layouts/ProcessException-Process Exception Layout.layout
+/src/layouts/Product2-Product Layout.layout
+/src/layouts/ProductConsumptionSchedule-Product Consumption Schedule Layout.layout
+/src/layouts/QuickText-Quick Text Layout.layout
+/src/layouts/Refund-Refund Layout.layout
+/src/layouts/RefundLinePayment-Refund Line Payment Layout.layout
+/src/layouts/ReportAnomalyEventStore-Report Anomaly Event Store Layout.layout
+/src/layouts/ResourceAbsence-Resource Absence Layout.layout
+/src/layouts/ResourcePreference-Resource Preference Layout.layout
+/src/layouts/ReturnOrder-Return Order Layout.layout
+/src/layouts/ReturnOrderItemAdjustment-Return Order Item Adjustment Layout.layout
+/src/layouts/ReturnOrderItemTax-Return Order Item Tax Layout.layout
+/src/layouts/ReturnOrderLineItem-Return Order Line Item Layout.layout
+/src/layouts/Scorecard-Scorecard Layout.layout
+/src/layouts/ScorecardAssociation-Scorecard Association Layout.layout
+/src/layouts/ScorecardMetric-Scorecard Metric Layout.layout
+/src/layouts/Seller-Seller Layout.layout
+/src/layouts/ServiceAppointment-Service Appointment Layout.layout
+/src/layouts/ServiceContract-Service Contract Layout.layout
+/src/layouts/ServiceResource-Service Resource Layout.layout
+/src/layouts/ServiceResourceSkill-Service Resource Skill Layout.layout
+/src/layouts/ServiceTerritory-Service Territory Layout.layout
+/src/layouts/ServiceTerritoryMember-Service Territory Member Layout.layout
+/src/layouts/SessionHijackingEventStore-Session Hijacking Event Store Layout.layout
+/src/layouts/Shift-Shift Layout.layout
+/src/layouts/ShiftWorkTopic-%5F%5FMISSING LABEL%5F%5F PropertyFile - val ShiftWorkTopic not found in section StandardLayouts.layout
+/src/layouts/SkillRequirement-Skill Requirement Layout.layout
+/src/layouts/SocialPersona-Social Persona Layout.layout
+/src/layouts/Solution-Solution Layout.layout
+/src/layouts/Task-Task Layout.layout
+/src/layouts/ThreatDetectionFeedback-Threat Detection Feedback Layout.layout
+/src/layouts/TimeSlot-Time Slot Layout.layout
+/src/layouts/User-User Layout.layout
+/src/layouts/UserAlt-User Profile Layout.layout
+/src/layouts/UserProvAccount-User Provisioning Account Layout.layout
+/src/layouts/UserProvisioningLog-User Provisioning Log Layout.layout
+/src/layouts/UserProvisioningRequest-User Provisioning Request Layout.layout
+/src/layouts/Waitlist-%5F%5FMISSING LABEL%5F%5F PropertyFile - val Waitlist not found in section StandardLayouts.layout
+/src/layouts/WebCart-Cart Layout.layout
+/src/layouts/WebCartAdjustmentBasis-Cart Adjustment Basis Layout.layout
+/src/layouts/WebCartAdjustmentGroup-Cart Adjustment Group Layout.layout
+/src/layouts/WebStore-Store Layout.layout
+/src/layouts/WebStoreConfig-Web Store Configuration Layout.layout
+/src/layouts/WorkOrder-Work Order Layout.layout
+/src/layouts/WorkOrderLineItem-Work Order Line Item Layout.layout
+/src/layouts/WorkPlan-Work Plan Layout.layout
+/src/layouts/WorkPlanTemplate-Work Plan Template Layout.layout
+/src/layouts/WorkPlanTemplateEntry-Work Plan Template Entry Layout.layout
+/src/layouts/WorkStep-Work Step Layout.layout
+/src/layouts/WorkStepTemplate-Work Step Template Layout.layout
+/src/layouts/WorkType-Work Type Layout.layout
+/src/layouts/WorkTypeGroup-Work Type Group Layout.layout
+/src/layouts/WorkTypeGroupMember-Work Type Group Member Layout.layout
+/src/objects/Account.object
+/src/objects/Activity.object
+/src/objects/Asset.object
+/src/objects/Campaign.object
+/src/objects/Case.object
+/src/objects/Contact.object
+/src/objects/Contract.object
+/src/objects/Lead.object
+/src/objects/MessagingEndUser.object
+/src/objects/Order.object
+/src/objects/Product2.object
+/src/objects/Solution.object
+/src/objects/User.object
