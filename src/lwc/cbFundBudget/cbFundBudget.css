@@ -1,0 +1,22 @@
+.error {
+    background-color: indianred;
+}
+
+.success {
+    background-color: #d2fbd9;
+}
+
+.info {
+    background-color: #f1f8fd;
+}
+
+.total {
+    background-color: #1D4F91;
+    color: #f1f8fd;
+    font-weight: bold;
+    font-size: larger;
+}
+
+.warningMessage {
+    color: indianred;
+}
