@@ -177,6 +177,14 @@ const _parseServerError = (reason, error) => {
 	}
 };
 
+const _getSOFromObject = (obj) => {
+	if (!obj || Object.keys(obj).length === 0) return [];
+	return Object.keys(obj).reduce((r, id) => {
+		r.push({value: id, label: obj[id]});
+		return r;
+	}, []);
+};
+
 const _setCell = (cell, value, fill, font, numFmt, alignment, border) => {
 	cell.value = value;
 	cell.fill = fill;
@@ -198,5 +206,6 @@ export {
 	_reduceErrors,
 	_getCopy,
 	_parseServerError,
-	_setCell
+	_setCell,
+	_getSOFromObject
 };

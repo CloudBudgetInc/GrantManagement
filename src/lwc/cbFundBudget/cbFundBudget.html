@@ -4,50 +4,51 @@
 	<c-cb-spinner show={showSpinner}></c-cb-spinner>
 	<!-- SPINNER -->
 
-	<lightning-card title="CloudBudget 3.0 Actual Loader">
-		<template if:true={showUploadButton}>
-			<lightning-layout class="slds-p-around_small">
+	<lightning-card title="Committed Budget">
 
-				<lightning-layout-item>
-					<lightning-input accept=".csv" label="" multiple name="file uploader"
-									 onchange={handleFilesUploading}
-									 type="file"></lightning-input>
-				</lightning-layout-item>
-				<lightning-layout-item>
-					<div class="slds-p-top_large slds-p-left_small">
-						<lightning-button label="Example" icon-name="utility:download" style="vertical-align: bottom;"
-										  onclick={uploadExampleFile}></lightning-button>
-					</div>
-				</lightning-layout-item>
-
-			</lightning-layout>
-
-		</template>
-		<template if:false={showUploadButton}>
-			<div class="slds-p-around_small">
-				<div class="slds-box">
-					<template for:each={report} for:item="line">
-						<div key={line}>{line}</div>
-					</template>
+		<lightning-layout>
+			<lightning-layout-item>
+				<div class="slds-p-top_large">
+					<lightning-button label="Generate Budget" onclick={generateBudgetLines}></lightning-button>
 				</div>
-				<lightning-button disabled={savingDisabled} label="Save Transactions" onclick={saveCBTransactions}
-								  variant="brand"></lightning-button>
-				<lightning-button label="Back" onclick={backToStart}></lightning-button>
-			</div>
-		</template>
+			</lightning-layout-item>
+			<lightning-layout-item>
+				<lightning-combobox
+						name="budgetYear"
+						label="Budget Year"
+						value={selectedBYId}
+						placeholder="Select BY"
+						options={budgetYearSO}
+						onchange={handleFilter}
+						required
+				></lightning-combobox>
+			</lightning-layout-item>
+		</lightning-layout>
 
-		<template lwc:if={warningList.length}>
-			<div class="slds-m-around_small">
-				<template for:each={warningList} for:item="wl">
-					<div class="warningMessage" key={wl}>{wl}</div>
-				</template>
-				<lightning-button-group class="slds-p-top_small">
-					<lightning-button label="Save it anyway" onclick={saveCBInvoices}
-									  variant="success"></lightning-button>
-					<lightning-button label="Cancel" onclick={cancelCBInvoices}></lightning-button>
-				</lightning-button-group>
-			</div>
-		</template>
+		<lightning-layout>
+			<lightning-layout-item size="2">
+				<lightning-input value={fundPlanLine.label} label="Label" disabled></lightning-input>
+			</lightning-layout-item>
+			<lightning-layout-item size="9">
+				<lightning-layout horizontal-align="space">
+					<template for:each={fundPlanLine.amounts} for:item="amount">
+
+						<lightning-layout-item key={amount}>
+							<lightning-input type='number' value={amount.cb5__Value__c} class="dec" formatter="currency"
+											 onfocusout={saveAmount}
+											 name={amount.Id}
+											 label={amount.label}></lightning-input>
+						</lightning-layout-item>
+
+					</template>
+				</lightning-layout>
+			</lightning-layout-item>
+			<lightning-layout-item size="1">
+				<lightning-input type='number' label="Total" value={fundPlanLine.total} formatter="currency" class="dec"
+								 disabled></lightning-input>
+			</lightning-layout-item>
+
+		</lightning-layout>
 
 	</lightning-card>
 </template>
