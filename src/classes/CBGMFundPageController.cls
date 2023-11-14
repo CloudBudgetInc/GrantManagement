@@ -27,8 +27,9 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 public with sharing class CBGMFundPageController {
 
-	private static final String committedFundScenarioName = 'Fund Committed';
-	private static final String fundingAccountName = 'Funding';
+	private static final String COMMITTED_FUND_SCENARIO_NAME = 'Fund Committed';
+	private static final String GRANT_PLAN_SCENARIO_NAME = 'Grant Plan';
+	private static final String DEFAULT_FUNDING_ACCOUNT_NAME = 'Funding';
 
 	@AuraEnabled
 	public static Map<String, Map<String, String>> getAnalyticsServer() {
@@ -50,7 +51,7 @@ public with sharing class CBGMFundPageController {
 						ORDER BY cb5__CBPeriod__r.cb5__Start__c
 				)
 				FROM cb5__CBBudgetLine__c
-				WHERE cb5__CBScenario__r.Name = :committedFundScenarioName
+				WHERE cb5__CBScenario__r.Name = :COMMITTED_FUND_SCENARIO_NAME
 				AND cb5__CBVariable1__r.cb5__ExtId__c = :oppId
 				ORDER BY cb5__CBBudgetYear__r.Name
 		];
@@ -65,8 +66,8 @@ public with sharing class CBGMFundPageController {
 	public static void generateFundBudgetLinesServer(String oppId) {
 		Opportunity opp = [SELECT Id, Name FROM Opportunity WHERE Id = :oppId];
 		String var1Id = [SELECT Id FROM cb5__CBVariable1__c WHERE cb5__ExtId__c = :oppId][0].Id;
-		String scenarioId = [SELECT Id FROM cb5__CBScenario__c WHERE Name = :committedFundScenarioName][0].Id;
-		String accountId = [SELECT Id FROM cb5__CBAccount__c WHERE Name = :fundingAccountName][0].Id;
+		String scenarioId = [SELECT Id FROM cb5__CBScenario__c WHERE Name = :COMMITTED_FUND_SCENARIO_NAME][0].Id;
+		String accountId = [SELECT Id FROM cb5__CBAccount__c WHERE Name = :DEFAULT_FUNDING_ACCOUNT_NAME][0].Id;
 		List<cb5__CBBudgetLine__c> budgetLines = new List<cb5__CBBudgetLine__c>();
 
 		for (cb5__CBBudgetYear__c budgetYear : [SELECT Id, (SELECT Id, Name FROM cb5__CBPeriods__r) FROM cb5__CBBudgetYear__c ORDER BY Name]) {
@@ -84,6 +85,22 @@ public with sharing class CBGMFundPageController {
 	@AuraEnabled
 	public static void saveFundAmountServer(cb5__CBAmount__c amount) {
 		update amount;
+	}
+
+	@AuraEnabled
+	public static List<cb5__CBBudgetLine__c> getAllocationGrantsServer(String oppId) {
+		System.debug('oppId = ' + oppId);
+		return [
+				SELECT Id, Name, cb5__CBVariable1__c, cb5__CBVariable2__c, cb5__CBVariable2__r.Name, cb5__CBBudgetYear__r.Name, cb5__CBBudgetYear__c, cb5__Value__c, (
+						SELECT Id, cb5__Value__c, cb5__CBPeriod__c, cb5__CBPeriod__r.cb5__CBBudgetYear__r.Name, cb5__CBPeriod__r.Name
+						FROM cb5__CBAmounts__r
+						ORDER BY cb5__CBPeriod__r.cb5__Start__c
+				)
+				FROM cb5__CBBudgetLine__c
+				WHERE cb5__CBScenario__r.Name = :GRANT_PLAN_SCENARIO_NAME
+				AND cb5__CBVariable1__r.cb5__ExtId__c = :oppId
+				ORDER BY cb5__CBBudgetYear__r.Name
+		];
 	}
 
 }

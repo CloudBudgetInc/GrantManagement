@@ -1,5 +1,6 @@
 .error {
     background-color: indianred;
+    color: red !important;
 }
 
 .success {
