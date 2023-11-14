@@ -126,6 +126,7 @@ export default class CBFundBudget extends LightningElement {
 				}
 				bl.cb5__CBAmounts__r.forEach((amount, i) => {
 					groupGrantBudgetLine.cb5__CBAmounts__r[i].cb5__Value__c += +amount.cb5__Value__c;
+					groupGrantBudgetLine.cb5__Value__c += +amount.cb5__Value__c;
 				});
 			});
 			this.grantBudgetLines = Object.values(BLObject);
@@ -146,18 +147,16 @@ export default class CBFundBudget extends LightningElement {
 				});
 				return r;
 			}, {});
-			console.log('allGrantedAmountsMap = ' + JSON.stringify(allGrantedAmountsMap));
 			this.allCommittedBudgetLines.forEach(bl => {
 				bl.cb5__CBAmounts__r.forEach(amount => {
 					const balanceAmount = _getCopy(amount);
-					balanceAmount.class = 'dec';
 					allBalanceAmounts[amount.cb5__CBPeriod__c] = balanceAmount;
 					let granted = allGrantedAmountsMap[amount.cb5__CBPeriod__c] || 0;
 					console.log('Granted = ' + granted);
 					let balanceValue = rest + +amount.cb5__Value__c - granted;
 					console.log('balanceValue = ' + balanceValue);
 					balanceAmount.cb5__Value__c = balanceValue;
-					if (balanceValue < 0) balanceAmount.class += ' error';
+					if (balanceValue < 0) balanceAmount.overBudget = true;
 					rest = balanceValue;
 				});
 			});

@@ -21,3 +21,12 @@
 .warningMessage {
     color: indianred;
 }
+
+.warningIcon {
+    width: 100%;
+    background-color: orange;
+}
+
+.totalValue {
+    font-weight: bold;
+}

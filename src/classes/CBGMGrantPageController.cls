@@ -65,7 +65,7 @@ public with sharing class CBGMGrantPageController {
 	@AuraEnabled
 	public static List<cb5__CBBudgetLine__c> getGrantBudgetLinesServer(String oppId) {
 		return [
-				SELECT Id, Name, cb5__CBVariable1__c, cb5__CBBudgetYear__r.Name, cb5__CBBudgetYear__c, cb5__Value__c, (
+				SELECT Id, Name, cb5__CBVariable1__c,cb5__CBBudgetYear__r.Name,cb5__CBBudgetYear__c,cb5__Value__c, (
 						SELECT Id, cb5__Value__c, cb5__CBPeriod__c, cb5__CBPeriod__r.cb5__CBBudgetYear__r.Name, cb5__CBPeriod__r.Name
 						FROM cb5__CBAmounts__r
 						ORDER BY cb5__CBPeriod__r.cb5__Start__c

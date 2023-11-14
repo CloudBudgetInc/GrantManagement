@@ -45,7 +45,7 @@
 				</lightning-layout>
 			</lightning-layout-item>
 			<lightning-layout-item size="1">
-				<lightning-input type='number' label="Total" value={fundPlanLine.total} formatter="currency" class="dec"
+				<lightning-input type='number' label="Total" value={fundPlanLine.total} formatter="currency" class="dec totalValue"
 								 disabled></lightning-input>
 			</lightning-layout-item>
 
@@ -65,9 +65,17 @@
 						<lightning-layout-item key={amount}>
 							<lightning-input type='number' value={amount.cb5__Value__c} formatter="currency"
 											 disabled variant="label-hidden"
-											 class={amount.class}
+											 class='dec'
 											 name={amount.Id}
 											 label={amount.label}></lightning-input>
+							<template lwc:if={amount.overBudget}>
+								<div class="warningIcon">
+									<lightning-icon icon-name="utility:warning" alternative-text="Overbudget"
+													variant="warning" size="xx-small"
+													title="Overbudget"></lightning-icon>
+									Over plan
+								</div>
+							</template>
 						</lightning-layout-item>
 
 					</template>
@@ -103,7 +111,7 @@
 				<lightning-layout-item size="1">
 					<lightning-input type='number' label="Total" value={bl.cb5__Value__c} formatter="currency"
 									 variant="label-hidden"
-									 class="dec"
+									 class="dec totalValue"
 									 disabled></lightning-input>
 				</lightning-layout-item>
 

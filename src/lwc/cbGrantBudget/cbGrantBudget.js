@@ -42,6 +42,7 @@ export default class CBFundBudget extends LightningElement {
 	@track selectedBYId;
 	@track budgetYearSO = [];
 	@track fundSO = [];
+	@track showTable = false;
 
 
 	async connectedCallback() {
@@ -65,30 +66,37 @@ export default class CBFundBudget extends LightningElement {
 		await getGrantBudgetLinesServer({oppId: this.recordId})
 			.then(allYearBudgetLines => {
 				this.allYearBudgetLines = allYearBudgetLines;
-				this.prepareTable();
+				this.prepareGrantBudgetLines();
 				this.showSpinner = false;
 			})
 			.catch(e => _parseServerError('Get Grant Budget Lines Error : ', e))
 	};
 
-	prepareTable = () => {
+	prepareGrantBudgetLines = () => {
 		try {
-			if (!this.allYearBudgetLines || this.allYearBudgetLines.length === 0) return null;
+			this.showTable = false;
+			if (!this.allYearBudgetLines || this.allYearBudgetLines.length === 0) {
+				if (!this.selectedBYId) this.selectedBYId = this.budgetYearSO[0].value;
+				return null;
+			}
 			if (!this.selectedBYId) this.selectedBYId = this.allYearBudgetLines[0].cb5__CBBudgetYear__c;
 			this.budgetLines = this.allYearBudgetLines.filter(bl => bl.cb5__CBBudgetYear__c === this.selectedBYId);
 			this.budgetLines.forEach(bl => bl.cb5__Value__c = 0);
-			this.recalculateTotals();
+			this.recalculateTotalLineAndGlobalTotal();
 			this.budgetLines = _getCopy(this.budgetLines);
+			this.showTable = true;
 		} catch (e) {
 			_message('error', 'Prepare Table Error : ' + e);
 		}
 	};
 
-	recalculateTotals = () => {
+	recalculateTotalLineAndGlobalTotal = () => {
 		try {
-			this.totalLine = {cb5__CBAmounts__r: [], cb5__Value__c: 0};
+			this.totalLine = {cb5__CBAmounts__r: [], cb5__Value__c: 0, globalTotal: 0};
+			let grantTotal = 0;
 			if (!this.budgetLines || this.budgetLines.length === 0) return null;
 			this.budgetLines.forEach(bl => bl.cb5__CBAmounts__r.forEach(amount => bl.cb5__Value__c += +amount.cb5__Value__c));
+			this.allYearBudgetLines.forEach(bl => bl.cb5__CBAmounts__r.forEach(amount => grantTotal += +amount.cb5__Value__c));
 			this.totalLine = this.budgetLines.reduce((r, bl) => {
 				r.cb5__Value__c += +bl.cb5__Value__c;
 				bl.cb5__CBAmounts__r.forEach((amount, i) => {
@@ -101,6 +109,7 @@ export default class CBFundBudget extends LightningElement {
 				});
 				return r;
 			}, {cb5__CBAmounts__r: [], cb5__Value__c: 0});
+			this.totalLine.grantTotal = grantTotal;
 		} catch (e) {
 			_message('error', 'Recalculate Total Error ' + e);
 		}
@@ -108,21 +117,30 @@ export default class CBFundBudget extends LightningElement {
 
 
 	/**
-	 * Handler for lost amount
+	 * Handler for lost amount and BL fields
 	 */
 	saveBudgetLine = async (event) => {
 		const property = event.target.name;
 		let value = event.target.value;
-		let blId = event.target.label;
+		let id = event.target.label;
 
 		if (['cb5__CBVariable1__c', 'Name'].includes(property)) {
-			const budgetLine = {Id: blId};
+			let bl = this.allYearBudgetLines.find(bl => bl.Id === id);
+			bl[property] = value;
+
+			const budgetLine = {Id: id};
 			budgetLine[property] = value;
 			await saveBudgetLineServer({budgetLine}).catch(e => _parseServerError('Save Budget Line Error', e));
 		} else {
+			this.allYearBudgetLines.forEach(bl =>
+				bl.cb5__CBAmounts__r.forEach(a => {
+					if (a.Id === id) a.cb5__Value__c = value;
+				})
+			);
+			this.prepareGrantBudgetLines();
 			await saveGrantAmountServer({
 				amount: {
-					Id: blId,
+					Id: id,
 					cb5__Value__c: value
 				}
 			}).catch(e => _parseServerError('Save Amount Line Error', e));
@@ -131,7 +149,7 @@ export default class CBFundBudget extends LightningElement {
 
 	handleFilter = async (event) => {
 		this.selectedBYId = event.target.value;
-		this.prepareTable();
+		this.prepareGrantBudgetLines();
 	};
 
 	addBudgetLines = () => {
@@ -140,6 +158,10 @@ export default class CBFundBudget extends LightningElement {
 			.then(() => this.getGrantBudgetLines())
 			.catch(e => _parseServerError('Add New Budget Line Error ', e))
 	};
+
+	searchFund = (event) => {
+
+	}
 
 
 }
