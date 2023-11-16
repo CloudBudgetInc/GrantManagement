@@ -44,6 +44,13 @@ export default class CBFundBudget extends LightningElement {
 	@track fundSO = [];
 	@track showTable = false;
 
+	///// FIND BUDGET //////
+	@track showFindBudgetModal = false;
+	@track targetBudgetLineId;
+	@track availableFundIds = [];
+
+	///// FIND BUDGET //////
+
 
 	async connectedCallback() {
 		_applyDecStyle();
@@ -58,6 +65,10 @@ export default class CBFundBudget extends LightningElement {
 			.then(analyticMap => {
 				this.budgetYearSO = _getSOFromObject(analyticMap.budgetYearSO);
 				this.fundSO = _getSOFromObject(analyticMap.fundSO);
+				if (this.fundSO && this.fundSO.length > 0) this.availableFundIds = this.fundSO.reduce((r, so) => {
+					r.push(so.value);
+					return r;
+				}, []);
 			})
 			.catch(e => _parseServerError('Get Analytics Error : ', e));
 	};
@@ -159,8 +170,40 @@ export default class CBFundBudget extends LightningElement {
 			.catch(e => _parseServerError('Add New Budget Line Error ', e))
 	};
 
-	searchFund = (event) => {
+	///////// FIND FUND ///////
+	findFund = (event) => {
+		this.targetBudgetLineId = event.target.value;
+		this.showFindBudgetModal = true;
+	};
 
+	applyFund = async (event) => {
+		try {
+			const params = event.detail;
+			const grantBL = this.budgetLines.find(bl => bl.Id === params.grantBudgetLineId);
+			grantBL.cb5__CBVariable1__c = params.fundId;
+			const saveEvent = {
+				target: {
+					name: 'cb5__CBVariable1__c',
+					label: params.grantBudgetLineId,
+					value: params.fundId,
+				}
+			};
+			this.budgetLines = _getCopy(this.budgetLines);
+			this.closeFindBudgetModal();
+			await this.saveBudgetLine(saveEvent);
+		} catch (e) {
+			_message('error', 'Apply Fund Error ' + e);
+		}
+	};
+
+	closeFindBudgetModal = () => this.showFindBudgetModal = false;
+
+	///////// FIND FUND ///////
+
+	constructor() {
+		super();
+		this.addEventListener("closeFindBudgetModal", this.closeFindBudgetModal);
+		this.addEventListener("applyFund", this.applyFund);
 	}
 
 

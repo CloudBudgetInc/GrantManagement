@@ -51,6 +51,14 @@
                             <option name="name" value="CBGMGrantPageController" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
+                          <MetadataEntry>
+                            <option name="name" value="CBGMConst" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
+                            <option name="name" value="CBGMFundBalanceService" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
                         </list>
                       </option>
                       <option name="name" value="ApexClass" />
@@ -4167,6 +4175,11 @@
                           <MetadataEntry>
                             <option name="folder" value="true" />
                             <option name="name" value="cbGrantBudget" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
+                            <option name="folder" value="true" />
+                            <option name="name" value="cbFindBudget" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
                         </list>

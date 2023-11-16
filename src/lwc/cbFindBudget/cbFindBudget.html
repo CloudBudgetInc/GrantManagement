@@ -1,0 +1,109 @@
+<template>
+
+	<!-- SPINNER -->
+	<c-cb-spinner show={showSpinner}></c-cb-spinner>
+	<!-- SPINNER -->
+
+	<section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
+			 class="slds-modal slds-fade-in-open slds-modal_large">
+		<div class="slds-modal__container">
+			<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" onclick={close}>
+				<svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+					<use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+				</svg>
+				<span class="slds-assistive-text">Close</span>
+			</button>
+			<div class="slds-modal__header">
+				<h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Funds Overview</h1>
+			</div>
+			<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+
+				<!-- TARGET BUDGET  -->
+
+				<template lwc:if={showTable}>
+					<div class="slds-text-heading_medium">Grant Budget Line</div>
+					<lightning-layout>
+						<lightning-layout-item size="2">
+							<lightning-input value={grantBudgetLine.Name} label="Label" disabled></lightning-input>
+						</lightning-layout-item>
+						<lightning-layout-item size="9">
+							<lightning-layout horizontal-align="space">
+								<template for:each={grantBudgetLine.cb5__CBAmounts__r} for:item="amount">
+
+									<lightning-layout-item key={amount}>
+										<lightning-input type='number' value={amount.cb5__Value__c} class="dec"
+														 formatter="currency" disabled
+														 onfocusout={saveAmount}
+														 name={amount.Id}
+														 label={amount.label}></lightning-input>
+									</lightning-layout-item>
+
+								</template>
+							</lightning-layout>
+						</lightning-layout-item>
+						<lightning-layout-item size="1">
+							<lightning-input type='number' label="Total" value={grantBudgetLine.total}
+											 formatter="currency" class="dec totalValue"
+											 disabled></lightning-input>
+						</lightning-layout-item>
+
+					</lightning-layout>
+
+					<!-- TARGET BUDGET  -->
+
+					<!-- FUNDS AVAILABLE  -->
+					<div class="slds-text-heading_medium">Funds Available</div>
+					<template for:each={fundBudgetLines} for:item="fundBudgetLine">
+						<lightning-layout key={fundBudgetLine}>
+							<lightning-layout-item size="2">
+								<lightning-layout>
+									<lightning-layout-item size="1">
+										<template lwc:if={fundBudgetLine.iconName}>
+											<lightning-button-icon icon-name={fundBudgetLine.iconName} variant="bare"
+																   onclick={applyFund}
+																   value={fundBudgetLine.cb5__CBVariable1__c}
+																   title="Apply"></lightning-button-icon>
+										</template>
+									</lightning-layout-item>
+									<lightning-layout-item size="11">
+										<lightning-input value={fundBudgetLine.Name} variant="label-hidden"
+														 disabled></lightning-input>
+									</lightning-layout-item>
+								</lightning-layout>
+							</lightning-layout-item>
+							<lightning-layout-item size="9">
+								<lightning-layout horizontal-align="space">
+									<template for:each={fundBudgetLine.cb5__CBAmounts__r} for:item="amount">
+
+										<lightning-layout-item key={amount}>
+											<lightning-input type='number' value={amount.cb5__Value__c} class="dec"
+															 formatter="currency" disabled
+															 onfocusout={saveAmount}
+															 name={amount.Id}
+															 variant="label-hidden"></lightning-input>
+										</lightning-layout-item>
+
+									</template>
+								</lightning-layout>
+							</lightning-layout-item>
+							<lightning-layout-item size="1">
+								<lightning-input type='number' variant="label-hidden" value={fundBudgetLine.total}
+												 formatter="currency" class="dec totalValue"
+												 disabled></lightning-input>
+							</lightning-layout-item>
+
+						</lightning-layout>
+					</template>
+				</template>
+
+				<!-- FUNDS AVAILABLE  -->
+
+			</div>
+			<div class="slds-modal__footer">
+				<lightning-button label="Close" icon-name="utility:close" onclick={close}></lightning-button>
+			</div>
+		</div>
+	</section>
+	<div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+
+</template>

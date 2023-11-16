@@ -88,8 +88,8 @@
 							></lightning-combobox>
 						</lightning-layout-item>
 						<lightning-layout-item size="2">
-							<lightning-button-icon icon-name="utility:record_lookup" title="Find a fund"
-												   onclick={searchFund}>
+							<lightning-button-icon icon-name="utility:record_lookup" title="Find a fund" value={bl.Id}
+												   onclick={findFund}>
 							</lightning-button-icon>
 						</lightning-layout-item>
 					</lightning-layout>
@@ -123,4 +123,10 @@
 		</template>
 
 	</lightning-card>
+
+	<template lwc:if={showFindBudgetModal}>
+		<c-cb-find-budget grant-budget-line-id={targetBudgetLineId}
+						  available-fund-ids={availableFundIds}></c-cb-find-budget>
+	</template>
+
 </template>
