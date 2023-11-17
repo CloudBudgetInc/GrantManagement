@@ -58,6 +58,24 @@ public with sharing class CBGMFundBalanceService {
 		set;
 	}
 
+	/**
+	 * Decorator for the main method
+	 *
+	 * @param var1Ids CBVar1 Ids
+	 */
+	public static void recalculateListOfVar1Balances(List<String> var1Ids) {
+		if (var1Ids == null || var1Ids.size() == 0) return;
+		List<String> oppIds = new List<String>();
+		for (cb5__CBVariable1__c var1 : [SELECT cb5__ExtId__c FROM cb5__CBVariable1__c WHERE Id IN:new Set<String> (var1Ids)]) {
+			oppIds.add(var1.cb5__ExtId__c);
+		}
+		recalculateListOfFundBalances(oppIds);
+	}
+
+	/**
+	 *
+	 * @param oppIds fund opportunity ids
+	 */
 	public static void recalculateListOfFundBalances(List<String> oppIds) {
 		String balanceScenarioId = [SELECT Id FROM cb5__CBScenario__c WHERE Name = :CBGMConst.BALANCE_FUND_SCENARIO_NAME][0].Id;
 		List<cb5__CBVariable1__c> funds = [SELECT Id,Name FROM cb5__CBVariable1__c WHERE cb5__ExtId__c IN:new Set<String>(oppIds)];
@@ -66,16 +84,16 @@ public with sharing class CBGMFundBalanceService {
 		deleteOldBalanceBudgetLines(fundIds, balanceScenarioId);
 
 		Map<String, BLWrapper> fundWrappers = getFundBudgetWrappers(fundIds);
-		System.debug('///////// FUND /////////');
-		for (BLWrapper fw : fundWrappers.values()) fw.debug();
-		System.debug('///////// FUND /////////');
+		//System.debug('///////// FUND /////////');
+		//for (BLWrapper fw : fundWrappers.values()) fw.debug();
+		//System.debug('///////// FUND /////////');
 		Map<String, BLWrapper> grantWrappers = getGrantBudgetWrappers(fundIds);
-		System.debug('///////// GRANT /////////');
-		for (BLWrapper gw : grantWrappers.values()) gw.debug();
-		System.debug('///////// GRANT /////////');
+		//System.debug('///////// GRANT /////////');
+		//for (BLWrapper gw : grantWrappers.values()) gw.debug();
+		//System.debug('///////// GRANT /////////');
 
 		List<BLWrapper> balanceWrappers = getBalanceWrappers(fundWrappers, grantWrappers, fundIds);
-		System.debug('///////// RESULT /////////');
+		//System.debug('///////// RESULT /////////');
 		for (BLWrapper wrap : balanceWrappers) {
 			wrap.debug();
 		}
@@ -99,8 +117,12 @@ public with sharing class CBGMFundBalanceService {
 		Decimal balanceValue = 0;
 		List<BLWrapper> result = new List<BLWrapper>();
 		for (cb5__CBBudgetYear__c budgetYear : budgetYears) {
+			if (fundWrapper == null) continue;
+			System.debug('fundWrapper = ' + fundWrapper);
+			System.debug('budgetYear.Id = ' + budgetYear.Id);
+			System.debug('fundWrapper.amountsMap = ' + fundWrapper.amountsMap);
 			Map<String, Decimal> byFundAmountsMap = fundWrapper.amountsMap.get(budgetYear.Id);
-			System.debug('**byFundAmountsMap (' + budgetYear.Name + ') = ' + byFundAmountsMap);
+			//System.debug('**byFundAmountsMap (' + budgetYear.Name + ') = ' + byFundAmountsMap);
 			if (byFundAmountsMap == null) continue; // this year does not need balances
 			BLWrapper balanceWrapper = new BLWrapper();
 			result.add(balanceWrapper);
@@ -117,7 +139,7 @@ public with sharing class CBGMFundBalanceService {
 				Decimal fundAmount = byFundAmountsMap.get(periodId);
 				Decimal grantAmount = byGrantAmountsMap == null || byGrantAmountsMap.get(periodId) == null ? 0 : byGrantAmountsMap.get(periodId);
 				balanceValue = balanceValue + fundAmount - grantAmount;
-				System.debug('**P:' + periodId + ' fundAmount=' + fundAmount + ' grantAmount=' + grantAmount + ' balanceValue=' + balanceValue);
+				//System.debug('**P:' + periodId + ' fundAmount=' + fundAmount + ' grantAmount=' + grantAmount + ' balanceValue=' + balanceValue);
 				balanceWrapper.amounts.add(new cb5__CBAmount__c(cb5__CBPeriod__c = periodId, cb5__Value__c = balanceValue));
 			}
 		}

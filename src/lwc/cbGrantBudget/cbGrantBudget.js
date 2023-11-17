@@ -27,7 +27,7 @@ import {api, LightningElement, track} from 'lwc';
 import getAnalyticsServer from '@salesforce/apex/CBGMGrantPageController.getAnalyticsServer';
 import getGrantBudgetLinesServer from '@salesforce/apex/CBGMGrantPageController.getGrantBudgetLinesServer';
 import saveGrantAmountServer from '@salesforce/apex/CBGMGrantPageController.saveGrantAmountServer';
-import saveBudgetLineServer from '@salesforce/apex/CBGMGrantPageController.saveBudgetLineServer';
+import saveGrantBudgetLineServer from '@salesforce/apex/CBGMGrantPageController.saveGrantBudgetLineServer';
 import addBudgetLineServer from '@salesforce/apex/CBGMGrantPageController.addBudgetLineServer';
 import {_applyDecStyle, _getCopy, _getSOFromObject, _message, _parseServerError} from "c/cbUtils";
 
@@ -141,7 +141,7 @@ export default class CBFundBudget extends LightningElement {
 
 			const budgetLine = {Id: id};
 			budgetLine[property] = value;
-			await saveBudgetLineServer({budgetLine}).catch(e => _parseServerError('Save Budget Line Error', e));
+			await saveGrantBudgetLineServer({budgetLine}).catch(e => _parseServerError('Save Budget Line Error', e));
 		} else {
 			this.allYearBudgetLines.forEach(bl =>
 				bl.cb5__CBAmounts__r.forEach(a => {
@@ -153,7 +153,8 @@ export default class CBFundBudget extends LightningElement {
 				amount: {
 					Id: id,
 					cb5__Value__c: value
-				}
+				},
+				oppId: this.recordId
 			}).catch(e => _parseServerError('Save Amount Line Error', e));
 		}
 	};

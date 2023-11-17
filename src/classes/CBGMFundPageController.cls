@@ -119,6 +119,7 @@ public with sharing class CBGMFundPageController {
 		insert budgetLine;
 		for (cb5__CBAmount__c amount : amounts) amount.cb5__CBBudgetLine__c = budgetLine.Id;
 		insert amounts;
+		CBGMOpportunityDomain.recalculateTotalAmounts(oppId);
 	}
 
 	@AuraEnabled

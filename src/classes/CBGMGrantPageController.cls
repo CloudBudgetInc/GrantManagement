@@ -78,13 +78,24 @@ public with sharing class CBGMGrantPageController {
 	}
 
 	@AuraEnabled
-	public static void saveGrantAmountServer(cb5__CBAmount__c amount) {
+	public static void saveGrantAmountServer(cb5__CBAmount__c amount, String oppId) {
 		update amount;
+		CBGMOpportunityDomain.recalculateTotalAmounts(oppId);
 	}
 
 	@AuraEnabled
-	public static void saveBudgetLineServer(cb5__CBBudgetLine__c budgetLine) {
+	public static void saveGrantBudgetLineServer(cb5__CBBudgetLine__c budgetLine) {
+		Set<String> var1Ids = new Set<String>();
+		if (budgetLine.Id != null) {
+			String oldVar1 = [SELECT cb5__CBVariable1__c FROM cb5__CBBudgetLine__c WHERE Id = :budgetLine.Id].cb5__CBVariable1__c;
+			if (oldVar1 != null) var1Ids.add(oldVar1);
+		}
+		if (budgetLine.cb5__CBVariable1__c != null) var1Ids.add(budgetLine.cb5__CBVariable1__c);
 		update budgetLine;
+
+		if (var1Ids.size() > 0) {
+			CBGMFundBalanceService.recalculateListOfVar1Balances(new List<String> (var1Ids));
+		}
 	}
 
 	@AuraEnabled

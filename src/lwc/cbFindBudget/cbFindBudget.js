@@ -76,21 +76,23 @@ export default class CBFindBudget extends LightningElement {
 		try {
 			const grant = this.grantBudgetLine;
 			const amountsSize = grant.cb5__CBAmounts__r.length;
-			this.fundBudgetLines.forEach(fund => {
+			this.fundBudgetLines.forEach(fund => { // iteration over fund line
 				fund.iconName = 'utility:check';
-				if (fund.total < grant.total) {
+				if (fund.total < grant.total) { // total needed more than total available
 					delete fund.iconName;
 					return null;
 				}
-				let availableRest = 0;
+				let alreadyGone = 0; // what already bitten off
 				for (let i = 0; i < amountsSize; i++) {
 					const grantNeeded = grant.cb5__CBAmounts__r[i].cb5__Value__c;
-					const fundHas = fund.cb5__CBAmounts__r[i].cb5__Value__c + availableRest;
-					if (grantNeeded > fundHas) {
+					if (grantNeeded === 0) continue;
+					const fundHas = fund.cb5__CBAmounts__r[i].cb5__Value__c;
+					if (grant.cb5__CBAmounts__r[i].cb5__Value__c > fundHas - alreadyGone) {
+						console.log('grantNeeded = ' + grantNeeded + ' it is over than ' + (fundHas - alreadyGone));
 						delete fund.iconName;
 						break;
 					}
-					availableRest = availableRest + fundHas - grantNeeded;
+					alreadyGone += grantNeeded;
 				}
 			})
 		} catch (e) {
