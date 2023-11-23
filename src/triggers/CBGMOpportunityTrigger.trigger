@@ -6,7 +6,9 @@ trigger CBGMOpportunityTrigger on Opportunity (after insert, after update) {
 
 	if (Trigger.isInsert || Trigger.isUpdate) {
 		Opportunity opp = Trigger.new[0];
-		CBGMOpportunityTriggerDomain.updateCBAnalytics(opp.Id);
+		CBGMOpportunityTriggerDomain.updateCBMapping(opp.Id);
+		CBGMOpportunityTriggerDomain.updateBudgetLines(opp.Id);
+
 	}
 
 }

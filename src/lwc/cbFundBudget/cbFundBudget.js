@@ -44,6 +44,7 @@ export default class CBFundBudget extends LightningElement {
 	@track selectedBYId;
 	@track budgetYearSO = [];
 	@track fundSO = [];
+	@track renderBudget = false;
 	@track fundPlanLine = {
 		Name: 'Committed Plan',
 		cb5__CBAmounts__r: [],
@@ -57,6 +58,7 @@ export default class CBFundBudget extends LightningElement {
 
 
 	async connectedCallback() {
+		this.showSpinner = true;
 		_applyDecStyle();
 		await this.getAnalytics();
 		await this.getFundBudgetLines();
@@ -64,6 +66,7 @@ export default class CBFundBudget extends LightningElement {
 		await this.getAllocationGrants();
 		this.generateGrantBudgetLines();
 		this.generateBalanceAmounts();
+		this.showSpinner = false;
 	};
 
 	getAnalytics = async () => {
@@ -74,7 +77,10 @@ export default class CBFundBudget extends LightningElement {
 
 	getFundBudgetLines = async () => {
 		await getFundBudgetLinesServer({oppId: this.recordId})
-			.then(budgetLines => this.allCommittedBudgetLines = budgetLines)
+			.then(budgetLines => {
+				if (budgetLines && budgetLines.length > 0) this.renderBudget = true;
+				this.allCommittedBudgetLines = budgetLines
+			})
 			.catch(e => _parseServerError('Get Budget Lines Error : ', e))
 	};
 
@@ -208,13 +214,21 @@ export default class CBFundBudget extends LightningElement {
 		await saveFundAmountServer({amount: amountNeedToBeSaved}).catch(e => _parseServerError('Save Amount Error', e));
 		this.generateBalanceAmounts();
 	};
+
+	/**
+	 * Method creates budget lines for whole budget years
+	 */
 	generateBudgetLines = async () => {
-		this.showSpinner = true;
-		await generateFundBudgetLinesServer({oppId: this.recordId})
-			.error(e => _parseServerError('Generate Budget Lines Error : ' + e));
-		await this.getFundBudgetLines();
-		_message('success', 'Generated');
-		this.showSpinner = false;
+		try {
+			this.showSpinner = true;
+			await generateFundBudgetLinesServer({oppId: this.recordId})
+				.catch(e => _parseServerError('Generate Budget Lines Error : ' + e));
+			await this.connectedCallback();
+			_message('success', 'Generated');
+			this.showSpinner = false;
+		} catch (e) {
+			_message('error', 'Generate BL Error : ' + e);
+		}
 	};
 	///////////////// HANDLERS /////////////////////
 

@@ -7,117 +7,129 @@
 	<lightning-card title="Committed Budget">
 
 		<lightning-layout>
-			<lightning-layout-item>
-				<div class="slds-p-top_large">
-					<lightning-button label="Generate Budget" onclick={generateBudgetLines}></lightning-button>
-				</div>
-			</lightning-layout-item>
-			<lightning-layout-item>
-				<lightning-combobox
-						name="budgetYear"
-						label="Budget Year"
-						value={selectedBYId}
-						placeholder="Select BY"
-						options={budgetYearSO}
-						onchange={handleFilter}
-						required
-				></lightning-combobox>
-			</lightning-layout-item>
-		</lightning-layout>
 
-		<!-- COMMITTED BUDGET  -->
-		<lightning-layout>
-			<lightning-layout-item size="2">
-				<lightning-input value={fundPlanLine.Name} label="Label" disabled></lightning-input>
-			</lightning-layout-item>
-			<lightning-layout-item size="9">
-				<lightning-layout horizontal-align="space">
-					<template for:each={fundPlanLine.cb5__CBAmounts__r} for:item="amount">
-
-						<lightning-layout-item key={amount}>
-							<lightning-input type='number' value={amount.cb5__Value__c} class="dec" formatter="currency"
-											 onfocusout={saveAmount}
-											 name={amount.Id}
-											 label={amount.label}></lightning-input>
-						</lightning-layout-item>
-
-					</template>
-				</lightning-layout>
-			</lightning-layout-item>
-			<lightning-layout-item size="1">
-				<lightning-input type='number' label="Total" value={fundPlanLine.total} formatter="currency" class="dec totalValue"
-								 disabled></lightning-input>
-			</lightning-layout-item>
+			<template lwc:if={renderBudget}>
+				<lightning-layout-item>
+					<lightning-combobox
+							name="budgetYear"
+							label="Budget Year"
+							value={selectedBYId}
+							placeholder="Select BY"
+							options={budgetYearSO}
+							onchange={handleFilter}
+							required
+					></lightning-combobox>
+				</lightning-layout-item>
+			</template>
+			<template lwc:else>
+				<lightning-layout-item>
+					<div class="slds-p-top_large">
+						<lightning-button label="Generate Budget" onclick={generateBudgetLines}></lightning-button>
+					</div>
+				</lightning-layout-item>
+			</template>
 
 		</lightning-layout>
-		<!-- COMMITTED BUDGET  -->
 
-		<!-- BUDGET BALANCE  -->
-		<lightning-layout>
-			<lightning-layout-item size="2">
-				<lightning-input value={fundBalanceLine.Name} label="Label" disabled
-								 variant="label-hidden"></lightning-input>
-			</lightning-layout-item>
-			<lightning-layout-item size="9">
-				<lightning-layout horizontal-align="space">
-					<template for:each={fundBalanceLine.cb5__CBAmounts__r} for:item="amount">
-
-						<lightning-layout-item key={amount}>
-							<lightning-input type='number' value={amount.cb5__Value__c} formatter="currency"
-											 disabled variant="label-hidden"
-											 class='dec'
-											 name={amount.Id}
-											 label={amount.label}></lightning-input>
-							<template lwc:if={amount.overBudget}>
-								<div class="warningIcon">
-									<lightning-icon icon-name="utility:warning" alternative-text="Overbudget"
-													variant="warning" size="xx-small"
-													title="Overbudget"></lightning-icon>
-									Over plan
-								</div>
-							</template>
-						</lightning-layout-item>
-
-					</template>
-				</lightning-layout>
-			</lightning-layout-item>
-			<lightning-layout-item size="1">
-
-			</lightning-layout-item>
-
-		</lightning-layout>
-		<!-- BUDGET BALANCE  -->
-
-		<!-- GRANT ALLOCATION  -->
-		GRANT ALLOCATION
-		<template for:each={grantBudgetLines} for:item="bl">
-			<lightning-layout key={bl}>
+		<template lwc:if={renderBudget}>
+			<!-- COMMITTED BUDGET  -->
+			<lightning-layout>
 				<lightning-layout-item size="2">
-					<lightning-input value={bl.Name} label="Label" disabled variant="label-hidden"></lightning-input>
+					<lightning-input value={fundPlanLine.Name} label="Label" disabled></lightning-input>
 				</lightning-layout-item>
 				<lightning-layout-item size="9">
 					<lightning-layout horizontal-align="space">
-						<template for:each={bl.cb5__CBAmounts__r} for:item="amount">
+						<template for:each={fundPlanLine.cb5__CBAmounts__r} for:item="amount">
 
 							<lightning-layout-item key={amount}>
 								<lightning-input type='number' value={amount.cb5__Value__c} class="dec"
-												 formatter="currency" variant="label-hidden"
-												 disabled></lightning-input>
+												 formatter="currency"
+												 onfocusout={saveAmount}
+												 name={amount.Id}
+												 label={amount.label}></lightning-input>
 							</lightning-layout-item>
 
 						</template>
 					</lightning-layout>
 				</lightning-layout-item>
 				<lightning-layout-item size="1">
-					<lightning-input type='number' label="Total" value={bl.cb5__Value__c} formatter="currency"
-									 variant="label-hidden"
+					<lightning-input type='number' label="Total" value={fundPlanLine.total} formatter="currency"
 									 class="dec totalValue"
 									 disabled></lightning-input>
 				</lightning-layout-item>
 
 			</lightning-layout>
+			<!-- COMMITTED BUDGET  -->
+
+			<!-- BUDGET BALANCE  -->
+			<lightning-layout>
+				<lightning-layout-item size="2">
+					<lightning-input value={fundBalanceLine.Name} label="Label" disabled
+									 variant="label-hidden"></lightning-input>
+				</lightning-layout-item>
+				<lightning-layout-item size="9">
+					<lightning-layout horizontal-align="space">
+						<template for:each={fundBalanceLine.cb5__CBAmounts__r} for:item="amount">
+
+							<lightning-layout-item key={amount}>
+								<lightning-input type='number' value={amount.cb5__Value__c} formatter="currency"
+												 disabled variant="label-hidden"
+												 class='dec'
+												 name={amount.Id}
+												 label={amount.label}></lightning-input>
+								<template lwc:if={amount.overBudget}>
+									<div class="warningIcon">
+										<lightning-icon icon-name="utility:warning" alternative-text="Overbudget"
+														variant="warning" size="xx-small"
+														title="Overbudget"></lightning-icon>
+										Over plan
+									</div>
+								</template>
+							</lightning-layout-item>
+
+						</template>
+					</lightning-layout>
+				</lightning-layout-item>
+				<lightning-layout-item size="1">
+
+				</lightning-layout-item>
+
+			</lightning-layout>
+			<!-- BUDGET BALANCE  -->
+
+			<!-- GRANT ALLOCATION  -->
+			GRANT ALLOCATION
+			<template for:each={grantBudgetLines} for:item="bl">
+				<lightning-layout key={bl}>
+					<lightning-layout-item size="2">
+						<lightning-input value={bl.Name} label="Label" disabled
+										 variant="label-hidden"></lightning-input>
+					</lightning-layout-item>
+					<lightning-layout-item size="9">
+						<lightning-layout horizontal-align="space">
+							<template for:each={bl.cb5__CBAmounts__r} for:item="amount">
+
+								<lightning-layout-item key={amount}>
+									<lightning-input type='number' value={amount.cb5__Value__c} class="dec"
+													 formatter="currency" variant="label-hidden"
+													 disabled></lightning-input>
+								</lightning-layout-item>
+
+							</template>
+						</lightning-layout>
+					</lightning-layout-item>
+					<lightning-layout-item size="1">
+						<lightning-input type='number' label="Total" value={bl.cb5__Value__c} formatter="currency"
+										 variant="label-hidden"
+										 class="dec totalValue"
+										 disabled></lightning-input>
+					</lightning-layout-item>
+
+				</lightning-layout>
+			</template>
+			<!-- GRANT ALLOCATION  -->
+
 		</template>
-		<!-- GRANT ALLOCATION  -->
 
 	</lightning-card>
 </template>

@@ -79,7 +79,10 @@ public with sharing class CBGMFundPageController {
 	}
 
 	@AuraEnabled
-	public static void saveFundAmountServer(cb5__CBAmount__c amount) {
+	public static void saveFundAmountServer(cb5__CBAmount__c amount, String oppId) {
+		Opportunity opportunity = [SELECT CBDivision__c,CBVariable3__c,CBVariable4__c,CBVariable5__c,CBAccount__c FROM Opportunity WHERE Id =: oppId];
+		cb5__CBBudgetLine__c budgetLine = [SELECT Id FROM cb5__CBBudgetLine__c];
+		if()
 		update amount;
 	}
 
@@ -102,6 +105,7 @@ public with sharing class CBGMFundPageController {
 	public static void saveFundBalanceBudgetLineServer(List<cb5__CBAmount__c> amounts, String oppId, String selectedBYId) {
 		String balanceScenarioId = [SELECT Id FROM cb5__CBScenario__c WHERE Name = :CBGMConst.BALANCE_FUND_SCENARIO_NAME][0].Id;
 		cb5__CBVariable1__c fund = [SELECT Id, Name FROM cb5__CBVariable1__c WHERE cb5__ExtId__c = :oppId][0];
+		Opportunity opportunity = [SELECT CBVariable3__c,CBVariable4__c,CBVariable5__c,CBDivision__c,CBAccount__c FROM Opportunity WHERE Id = :oppId];
 		String accountId = [SELECT Id FROM cb5__CBAccount__c WHERE Name = :CBGMConst.DEFAULT_FUNDING_ACCOUNT_NAME][0].Id;
 		delete [
 				SELECT Id
@@ -113,9 +117,16 @@ public with sharing class CBGMFundPageController {
 		cb5__CBBudgetLine__c budgetLine = new cb5__CBBudgetLine__c();
 		budgetLine.cb5__CBScenario__c = balanceScenarioId;
 		budgetLine.cb5__CBVariable1__c = fund.Id;
+		if (opportunity.CBVariable3__c != null) budgetLine.cb5__CBVariable3__c = opportunity.CBVariable3__c;
+		if (opportunity.CBVariable4__c != null) budgetLine.cb5__CBVariable4__c = opportunity.CBVariable4__c;
+		if (opportunity.CBVariable5__c != null) budgetLine.cb5__CBVariable5__c = opportunity.CBVariable5__c;
+		if (opportunity.CBDivision__c != null) budgetLine.cb5__CBDivision__c = opportunity.CBDivision__c;
+		if (opportunity.CBAccount__c != null) budgetLine.cb5__CBAccount__c = opportunity.CBAccount__c;
 		budgetLine.Name = fund.Name;
 		budgetLine.cb5__CBBudgetYear__c = selectedBYId;
 		budgetLine.cb5__CBAccount__c = accountId;
+		System.debug('OP:' + opportunity);
+		System.debug('BL:' + budgetLine);
 		insert budgetLine;
 		for (cb5__CBAmount__c amount : amounts) amount.cb5__CBBudgetLine__c = budgetLine.Id;
 		insert amounts;

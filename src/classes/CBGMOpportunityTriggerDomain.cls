@@ -27,12 +27,20 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 public with sharing class CBGMOpportunityTriggerDomain {
 
-	public static void updateCBAnalytics(Id oppId) {
-		Opportunity opp = [SELECT Id, Name, RecordType.Name FROM Opportunity WHERE id = :oppId][0];
-		if (opp.RecordType.Name == 'Fund') {
+	private static Opportunity opp;
+	private static Opportunity getOpportunity(Id oppId) {
+		if (opp == null) opp = [
+				SELECT Id,Name,RecordType.Name,CBAccount__c,CBDivision__c,CBVariable3__c,CBVariable4__c,CBVariable5__c
+				FROM Opportunity
+				WHERE Id = :oppId
+		];
+		return opp;
+	}
+
+	public static void updateCBMapping(Id oppId) {
+		Opportunity opportunity = getOpportunity(oppId);
+		if (opportunity.RecordType.Name == 'Fund') {
 			List<cb5__CBVariable1__c> variable1s = [SELECT Id FROM cb5__CBVariable1__c WHERE cb5__ExtId__c = :opp.Id];
-			System.debug('opp.Id = ' + opp.Id + ' Name = ' + opp.Name);
-			System.debug('Variables = ' + variable1s);
 			if (variable1s.size() == 0) {
 				insert new cb5__CBVariable1__c(Name = opp.Name, cb5__ExtId__c = opp.Id);
 			} else {
@@ -41,7 +49,7 @@ public with sharing class CBGMOpportunityTriggerDomain {
 				update var1;
 			}
 		}
-		if (opp.RecordType.Name == 'Grant') {
+		if (opportunity.RecordType.Name == 'Grant') {
 			List<cb5__CBVariable2__c> variable2s = [SELECT Id FROM cb5__CBVariable2__c WHERE cb5__ExtId__c = :opp.Id];
 			if (variable2s.size() == 0) {
 				insert new cb5__CBVariable2__c(Name = opp.Name, cb5__ExtId__c = opp.Id);
@@ -52,5 +60,26 @@ public with sharing class CBGMOpportunityTriggerDomain {
 			}
 		}
 	}
+
+	public static void updateBudgetLines(Id oppId) {
+		Opportunity opportunity = getOpportunity(oppId);
+		List<cb5__CBBudgetLine__c> budgetLines;
+		if (opportunity.RecordType.Name == 'Fund') {
+			budgetLines = [SELECT Id FROM cb5__CBBudgetLine__c WHERE cb5__CBVariable1__r.cb5__ExtId__c = :oppId];
+		}
+		if (opportunity.RecordType.Name == 'Grant') {
+			budgetLines = [SELECT Id FROM cb5__CBBudgetLine__c WHERE cb5__CBVariable2__r.cb5__ExtId__c = :oppId];
+		}
+		if (budgetLines == null || budgetLines.size() == 0) return;
+		for (cb5__CBBudgetLine__c bl : budgetLines) {
+			if (opportunity.CBAccount__c != null) bl.cb5__CBAccount__c = opportunity.CBAccount__c;
+			if (opportunity.CBDivision__c != null) bl.cb5__CBDivision__c = opportunity.CBDivision__c;
+			if (opportunity.CBVariable3__c != null) bl.cb5__CBVariable3__c = opportunity.CBVariable3__c;
+			if (opportunity.CBVariable4__c != null) bl.cb5__CBVariable4__c = opportunity.CBVariable4__c;
+			if (opportunity.CBVariable5__c != null) bl.cb5__CBVariable5__c = opportunity.CBVariable5__c;
+		}
+		update budgetLines;
+	}
+
 
 }
