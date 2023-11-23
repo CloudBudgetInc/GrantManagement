@@ -37,7 +37,7 @@ export default class CBFundBudget extends LightningElement {
 	@api recordId;
 	@track showSpinner = false;
 	@track allYearBudgetLines = [];
-	@track totalLine = {};
+	@track totalLine = {grantTotal: 0};
 	@track budgetLines = [];
 	@track selectedBYId;
 	@track budgetYearSO = [];

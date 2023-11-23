@@ -8,13 +8,15 @@
 
 
 		<lightning-layout>
-			<lightning-layout-item size="1">
+			<lightning-layout-item size="2">
 				<div class="slds-p-top_large">
 					<lightning-button label="Add" icon-name="utility:add"
 									  onclick={addBudgetLines}></lightning-button>
+					<lightning-button label="" icon-name="utility:refresh"
+									  onclick={connectedCallback}></lightning-button>
 				</div>
 			</lightning-layout-item>
-			<lightning-layout-item size="10">
+			<lightning-layout-item size="9">
 				<div style="width: 100px;">
 					<lightning-combobox
 							name="budgetYear"
@@ -71,6 +73,7 @@
 			<lightning-layout key={bl.Name}>
 				<lightning-layout-item size="1">
 					<lightning-input value={bl.Name} label={bl.Id} variant="label-hidden" name="Name"
+									 disabled={bl.cb5__Lock__c}
 									 onfocusout={saveBudgetLine}></lightning-input>
 				</lightning-layout-item>
 				<lightning-layout-item size="2">
@@ -83,12 +86,14 @@
 									value={bl.cb5__CBVariable1__c}
 									placeholder="Select Fund"
 									options={fundSO}
+									disabled={bl.cb5__Lock__c}
 									onfocusout={saveBudgetLine}
 									required
 							></lightning-combobox>
 						</lightning-layout-item>
 						<lightning-layout-item size="2">
 							<lightning-button-icon icon-name="utility:record_lookup" title="Find a fund" value={bl.Id}
+												   disabled={bl.cb5__Lock__c}
 												   onclick={findFund}>
 							</lightning-button-icon>
 						</lightning-layout-item>
@@ -102,7 +107,7 @@
 
 							<lightning-layout-item key={amount}>
 								<lightning-input variant="label-hidden" type='number' value={amount.cb5__Value__c}
-												 class="dec" step="1.0"
+												 class="dec" step="1.0" disabled={bl.cb5__Lock__c}
 												 formatter="currency"
 												 onfocusout={saveBudgetLine}
 												 label={amount.Id}></lightning-input>

@@ -61,17 +61,23 @@ public with sharing class CBGMOpportunityTriggerDomain {
 		}
 	}
 
+	/**
+	 * Method sync budget Line analytics and Opportunity analytics
+	 *
+	 * @param oppId
+	 */
 	public static void updateBudgetLines(Id oppId) {
 		Opportunity opportunity = getOpportunity(oppId);
 		List<cb5__CBBudgetLine__c> budgetLines;
 		if (opportunity.RecordType.Name == 'Fund') {
-			budgetLines = [SELECT Id FROM cb5__CBBudgetLine__c WHERE cb5__CBVariable1__r.cb5__ExtId__c = :oppId];
+			budgetLines = [SELECT Id,cb5__Lock__c FROM cb5__CBBudgetLine__c WHERE cb5__CBVariable1__r.cb5__ExtId__c = :oppId];
 		}
 		if (opportunity.RecordType.Name == 'Grant') {
-			budgetLines = [SELECT Id FROM cb5__CBBudgetLine__c WHERE cb5__CBVariable2__r.cb5__ExtId__c = :oppId];
+			budgetLines = [SELECT Id,cb5__Lock__c FROM cb5__CBBudgetLine__c WHERE cb5__CBVariable2__r.cb5__ExtId__c = :oppId];
 		}
 		if (budgetLines == null || budgetLines.size() == 0) return;
 		for (cb5__CBBudgetLine__c bl : budgetLines) {
+			if (bl.cb5__Lock__c != null) return;
 			if (opportunity.CBAccount__c != null) bl.cb5__CBAccount__c = opportunity.CBAccount__c;
 			if (opportunity.CBDivision__c != null) bl.cb5__CBDivision__c = opportunity.CBDivision__c;
 			if (opportunity.CBVariable3__c != null) bl.cb5__CBVariable3__c = opportunity.CBVariable3__c;
