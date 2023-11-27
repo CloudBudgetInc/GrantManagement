@@ -43,6 +43,7 @@ export default class CBFundBudget extends LightningElement {
 	@track budgetYearSO = [];
 	@track fundSO = [];
 	@track showTable = false;
+	@track budgetLineId = false;
 
 	///// FIND BUDGET //////
 	@track showFindBudgetModal = false;
@@ -167,7 +168,11 @@ export default class CBFundBudget extends LightningElement {
 	addBudgetLines = () => {
 		this.showSpinner = true;
 		addBudgetLineServer({oppId: this.recordId, selectedBYId: this.selectedBYId})
-			.then(() => this.getGrantBudgetLines())
+			.then(async () => {
+				await this.getGrantBudgetLines();
+				const blId = this.budgetLines[this.budgetLines.length - 1].Id;
+				this.openBudgetLine(null, blId);
+			})
 			.catch(e => _parseServerError('Add New Budget Line Error ', e))
 	};
 
@@ -201,9 +206,19 @@ export default class CBFundBudget extends LightningElement {
 
 	///////// FIND FUND ///////
 
+	openBudgetLine = (event, blId) => {
+		this.budgetLineId = blId ? blId : event.target.dataset.id;
+	};
+
+	closeBudgetLine = () => {
+		this.budgetLineId = undefined;
+		this.connectedCallback();
+	};
+
 	constructor() {
 		super();
 		this.addEventListener("closeFindBudgetModal", this.closeFindBudgetModal);
+		this.addEventListener("closeBudgetLineModal", this.closeBudgetLine);
 		this.addEventListener("applyFund", this.applyFund);
 	}
 

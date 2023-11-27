@@ -31,6 +31,7 @@ import generateFundBudgetLinesServer from '@salesforce/apex/CBGMFundPageControll
 import saveFundAmountServer from '@salesforce/apex/CBGMFundPageController.saveFundAmountServer';
 import getAllocationGrantsServer from '@salesforce/apex/CBGMFundPageController.getAllocationGrantsServer';
 import saveFundBalanceBudgetLineServer from '@salesforce/apex/CBGMFundPageController.saveFundBalanceBudgetLineServer';
+import updateOpportunityByTriggerServer from '@salesforce/apex/CBGMFundPageController.updateOpportunityByTriggerServer';
 import {_applyDecStyle, _getCopy, _getSOFromObject, _message, _parseServerError} from "c/cbUtils";
 
 
@@ -60,6 +61,7 @@ export default class CBFundBudget extends LightningElement {
 	async connectedCallback() {
 		this.showSpinner = true;
 		_applyDecStyle();
+		await this.updateOpportunityByTrigger();
 		await this.getAnalytics();
 		await this.getFundBudgetLines();
 		this.generateCommittedBudgetLine();
@@ -67,6 +69,10 @@ export default class CBFundBudget extends LightningElement {
 		this.generateGrantBudgetLines();
 		this.generateBalanceAmounts();
 		this.showSpinner = false;
+	};
+
+	updateOpportunityByTrigger = async () => {
+		await updateOpportunityByTriggerServer({oppId: this.recordId}).catch(e => _parseServerError('Update Opportunity by Trigger Error : ', e));
 	};
 
 	getAnalytics = async () => {

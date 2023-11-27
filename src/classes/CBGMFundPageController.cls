@@ -79,11 +79,13 @@ public with sharing class CBGMFundPageController {
 	}
 
 	@AuraEnabled
-	public static void saveFundAmountServer(cb5__CBAmount__c amount, String oppId) {
-		Opportunity opportunity = [SELECT CBDivision__c,CBVariable3__c,CBVariable4__c,CBVariable5__c,CBAccount__c FROM Opportunity WHERE Id =: oppId];
-		cb5__CBBudgetLine__c budgetLine = [SELECT Id FROM cb5__CBBudgetLine__c];
-		if()
+	public static void saveFundAmountServer(cb5__CBAmount__c amount) {
 		update amount;
+	}
+
+	@AuraEnabled
+	public static void updateOpportunityByTriggerServer(String oppId) {
+		update [SELECT Id FROM Opportunity WHERE Id = :oppId];
 	}
 
 	@AuraEnabled
@@ -125,18 +127,15 @@ public with sharing class CBGMFundPageController {
 		budgetLine.Name = fund.Name;
 		budgetLine.cb5__CBBudgetYear__c = selectedBYId;
 		budgetLine.cb5__CBAccount__c = accountId;
-		System.debug('OP:' + opportunity);
-		System.debug('BL:' + budgetLine);
-		insert budgetLine;
+		upsert budgetLine;
 		for (cb5__CBAmount__c amount : amounts) amount.cb5__CBBudgetLine__c = budgetLine.Id;
-		insert amounts;
+		upsert amounts;
 		CBGMOpportunityDomain.recalculateTotalAmounts(oppId);
 	}
 
 	@AuraEnabled
 	public static List<cb5__CBBudgetLine__c> findBudgetServer(String gblId, List<String> availableFundIds) {
 		List<cb5__CBBudgetLine__c> r = new List<cb5__CBBudgetLine__c>();
-		System.debug('gblId = ' + gblId + ' availableFundIds = ' + availableFundIds);
 		if (availableFundIds == null || availableFundIds.size() == 0) return r;
 
 		cb5__CBBudgetLine__c grantBudgetLine = [ // grant budget Line

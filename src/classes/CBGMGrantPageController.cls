@@ -27,9 +27,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 public with sharing class CBGMGrantPageController {
 
-	private static final String GRANT_PLAN_SCENARIO_NAME = 'Grant Plan';
-	private static final String DEFAULT_GRANT_ACCOUNT_NAME = 'Grant';
-
 	@AuraEnabled
 	public static Map<String, Map<String, String>> getAnalyticsServer(String oppId) {
 		Map<String, Map<String, String>> r = new Map<String, Map<String, String>>();
@@ -42,16 +39,17 @@ public with sharing class CBGMGrantPageController {
 
 		Map<String, String> funds = new Map<String, String>();
 		String destination = [SELECT Destination__c FROM Opportunity WHERE Id = :oppId][0].Destination__c;
-		List<String> destSet = new List<String>(destination.split(','));
-
 		Map<String, String> fundSO = new Map<String, String>();
-		Set<String> fundOppIds = new Set<String>();
-		for (Opportunity fund : [SELECT Id FROM Opportunity WHERE Destination__c INCLUDES (:destination)]) fundOppIds.add(fund.Id);
-		for (cb5__CBVariable1__c fund : [SELECT Id, Name FROM cb5__CBVariable1__c WHERE cb5__ExtId__c IN:fundOppIds ORDER BY Name]) {
-			fundSO.put(fund.Id, fund.Name);
-		}
 		r.put('fundSO', fundSO);
 
+		if(!String.isEmpty(destination)) {
+			List<String> destSet = new List<String>(destination.split(','));
+			Set<String> fundOppIds = new Set<String>();
+			for (Opportunity fund : [SELECT Id FROM Opportunity WHERE Destination__c INCLUDES (:destination)]) fundOppIds.add(fund.Id);
+			for (cb5__CBVariable1__c fund : [SELECT Id, Name FROM cb5__CBVariable1__c WHERE cb5__ExtId__c IN:fundOppIds ORDER BY Name]) {
+				fundSO.put(fund.Id, fund.Name);
+			}
+		}
 		return r;
 	}
 
@@ -71,7 +69,7 @@ public with sharing class CBGMGrantPageController {
 						ORDER BY cb5__CBPeriod__r.cb5__Start__c
 				)
 				FROM cb5__CBBudgetLine__c
-				WHERE cb5__CBScenario__r.Name = :GRANT_PLAN_SCENARIO_NAME
+				WHERE cb5__CBScenario__r.Name = :CBGMConst.GRANT_PLAN_SCENARIO_NAME
 				AND cb5__CBVariable2__r.cb5__ExtId__c = :oppId
 				ORDER BY cb5__CBBudgetYear__r.Name, CreatedDate
 		];
@@ -101,8 +99,8 @@ public with sharing class CBGMGrantPageController {
 	@AuraEnabled
 	public static void addBudgetLineServer(String oppId, String selectedBYId) {
 		String grantId = [SELECT Id FROM cb5__CBVariable2__c WHERE cb5__ExtId__c = :oppId][0].Id;
-		String accId = [SELECT Id FROM cb5__CBAccount__c WHERE Name = :DEFAULT_GRANT_ACCOUNT_NAME][0].Id;
-		String scenarioId = [SELECT Id FROM cb5__CBScenario__c WHERE Name = :GRANT_PLAN_SCENARIO_NAME][0].Id;
+		String accId = [SELECT Id FROM cb5__CBAccount__c WHERE Name = :CBGMConst.DEFAULT_GRANT_ACCOUNT_NAME][0].Id;
+		String scenarioId = [SELECT Id FROM cb5__CBScenario__c WHERE Name = :CBGMConst.GRANT_PLAN_SCENARIO_NAME][0].Id;
 
 		cb5__CBBudgetLine__c budgetLine = new cb5__CBBudgetLine__c(Name = 'New', cb5__CBVariable2__c = grantId, cb5__CBAccount__c = accId,
 				cb5__CBBudgetYear__c = selectedBYId, cb5__CBScenario__c = scenarioId);

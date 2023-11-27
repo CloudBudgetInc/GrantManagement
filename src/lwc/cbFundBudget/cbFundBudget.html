@@ -20,6 +20,12 @@
 							required
 					></lightning-combobox>
 				</lightning-layout-item>
+				<lightning-layout-item>
+					<div class="slds-p-top_large">
+						<lightning-button label="" icon-name="utility:refresh"
+										  onclick={connectedCallback}></lightning-button>
+					</div>
+				</lightning-layout-item>
 			</template>
 			<template lwc:else>
 				<lightning-layout-item>

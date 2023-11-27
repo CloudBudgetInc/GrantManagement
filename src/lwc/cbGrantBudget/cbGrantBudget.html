@@ -72,9 +72,7 @@
 		<template for:each={budgetLines} for:item="bl">
 			<lightning-layout key={bl.Name}>
 				<lightning-layout-item size="1">
-					<lightning-input value={bl.Name} label={bl.Id} variant="label-hidden" name="Name"
-									 disabled={bl.cb5__Lock__c}
-									 onfocusout={saveBudgetLine}></lightning-input>
+					<p class="slds-truncate link" data-id={bl.Id} onclick={openBudgetLine}>{bl.Name}</p>
 				</lightning-layout-item>
 				<lightning-layout-item size="2">
 					<lightning-layout>
@@ -132,6 +130,10 @@
 	<template lwc:if={showFindBudgetModal}>
 		<c-cb-find-budget grant-budget-line-id={targetBudgetLineId}
 						  available-fund-ids={availableFundIds}></c-cb-find-budget>
+	</template>
+
+	<template lwc:if={budgetLineId}>
+		<cb5-cb-budget-line-modal record-id={budgetLineId}></cb5-cb-budget-line-modal>
 	</template>
 
 </template>

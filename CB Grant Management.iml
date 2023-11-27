@@ -40,10 +40,6 @@
                       <option name="entries">
                         <list>
                           <MetadataEntry>
-                            <option name="name" value="CBGMOpportunityTriggerDomain" />
-                            <option name="selected" value="true" />
-                          </MetadataEntry>
-                          <MetadataEntry>
                             <option name="name" value="CBGMFundPageController" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
@@ -73,6 +69,14 @@
                           </MetadataEntry>
                           <MetadataEntry>
                             <option name="name" value="CBGMLockBudgetAction" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
+                            <option name="name" value="CBGMWarningsService" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
+                            <option name="name" value="CBGMTest" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
                         </list>

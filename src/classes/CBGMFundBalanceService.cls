@@ -137,6 +137,7 @@ public with sharing class CBGMFundBalanceService {
 			for (cb5__CBPeriod__c period : budgetYear.cb5__CBPeriods__r) {
 				String periodId = period.Id;
 				Decimal fundAmount = byFundAmountsMap.get(periodId);
+				fundAmount = fundAmount == null ? 0 : fundAmount;
 				Decimal grantAmount = byGrantAmountsMap == null || byGrantAmountsMap.get(periodId) == null ? 0 : byGrantAmountsMap.get(periodId);
 				balanceValue = balanceValue + fundAmount - grantAmount;
 				//System.debug('**P:' + periodId + ' fundAmount=' + fundAmount + ' grantAmount=' + grantAmount + ' balanceValue=' + balanceValue);

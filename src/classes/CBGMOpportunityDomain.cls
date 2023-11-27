@@ -68,4 +68,104 @@ public with sharing class CBGMOpportunityDomain {
 		}
 	}
 
+	private static Map<Id, Opportunity> oppMap;
+	public static void populateOpportunityMap(Set<Id> oppIds) {
+		oppMap = new Map<Id, Opportunity>();
+		for (Opportunity opp : [
+				SELECT Id,Name,RecordType.Name,CBAccount__c,CBDivision__c,CBVariable3__c,CBVariable4__c,CBVariable5__c
+				FROM Opportunity
+				WHERE Id = :oppIds
+		]) oppMap.put(opp.Id, opp);
+	}
+
+	public static void updateCBMapping(Id oppId) {
+		System.debug('Update Mapping: ' + oppId);
+		Opportunity opportunity = oppMap.get(oppId);
+		System.debug('MAP TRIGGER FOR ' + opportunity.Name + ' => ' + opportunity.RecordType.Name);
+		if (opportunity.RecordType.Name == 'Fund') {
+			List<cb5__CBVariable1__c> variable1s = [SELECT Id FROM cb5__CBVariable1__c WHERE cb5__ExtId__c = :oppId];
+			if (variable1s.size() == 0) {
+				insert new cb5__CBVariable1__c(Name = opportunity.Name, cb5__ExtId__c = oppId);
+			} else {
+				cb5__CBVariable1__c var1 = variable1s[0];
+				var1.Name = opportunity.Name;
+				update var1;
+			}
+		}
+		if (opportunity.RecordType.Name == 'Grant') {
+			List<cb5__CBVariable2__c> variable2s = [SELECT Id FROM cb5__CBVariable2__c WHERE cb5__ExtId__c = :oppId];
+			System.debug('variable2s = ' + variable2s);
+			if (variable2s.size() == 0) {
+				System.debug('INSERT VAR2');
+				insert new cb5__CBVariable2__c(Name = opportunity.Name, cb5__ExtId__c = oppId);
+			} else {
+				cb5__CBVariable2__c var2 = variable2s[0];
+				var2.Name = opportunity.Name;
+				update var2;
+			}
+		}
+	}
+
+	/**
+	 * Method sync budget Line analytics and Opportunity analytics
+	 *
+	 * @param oppId
+	 */
+	public static void updateBudgetLines(Id oppId) {
+		Opportunity opportunity = oppMap.get(oppId);
+		List<cb5__CBBudgetLine__c> budgetLines;
+		if (opportunity.RecordType.Name == 'Fund') {
+			budgetLines = [SELECT Id,cb5__Lock__c FROM cb5__CBBudgetLine__c WHERE cb5__CBVariable1__r.cb5__ExtId__c = :oppId];
+		}
+		if (opportunity.RecordType.Name == 'Grant') {
+			budgetLines = [SELECT Id,cb5__Lock__c FROM cb5__CBBudgetLine__c WHERE cb5__CBVariable2__r.cb5__ExtId__c = :oppId];
+		}
+		if (budgetLines == null || budgetLines.size() == 0) return;
+		for (cb5__CBBudgetLine__c bl : budgetLines) {
+			if (bl.cb5__Lock__c != null) return;
+			if (opportunity.CBAccount__c != null) bl.cb5__CBAccount__c = opportunity.CBAccount__c;
+			if (opportunity.CBDivision__c != null) bl.cb5__CBDivision__c = opportunity.CBDivision__c;
+			if (opportunity.CBVariable3__c != null) bl.cb5__CBVariable3__c = opportunity.CBVariable3__c;
+			if (opportunity.CBVariable4__c != null) bl.cb5__CBVariable4__c = opportunity.CBVariable4__c;
+			if (opportunity.CBVariable5__c != null) bl.cb5__CBVariable5__c = opportunity.CBVariable5__c;
+		}
+		update budgetLines;
+	}
+
+	public static void updateContractValues(Id oppId) {
+		List<Contract> contracts = [SELECT Amount__c,StartDate FROM Contract WHERE Opportunity__c = :oppId];
+		if (contracts.size() == null) return ;
+		List<cb5__CBAmount__c> amounts = [SELECT Id,cb5__CBPeriod__c FROM cb5__CBAmount__c WHERE cb5__CBBudgetLine__r.cb5__CBVariable1__r.cb5__ExtId__c = :oppId AND cb5__CBBudgetLine__r.cb5__CBScenario__r.Name = :CBGMConst.COMMITTED_FUND_SCENARIO_NAME];
+		if (amounts.size() == 0) return ;
+
+		Map<Date, Id> dateToCBPeriodIdMap = new Map<Date, Id>();
+		for (cb5__CBPeriod__c p : [SELECT Id, cb5__Start__c FROM cb5__CBPeriod__c ORDER BY cb5__Start__c]) dateToCBPeriodIdMap.put(p.cb5__Start__c, p.Id);
+		Map<Id, Decimal> periodIdAmountMap = new Map<Id, Decimal>();
+		for (Contract ctr : contracts) {
+			for (Date pDate : dateToCBPeriodIdMap.keySet()) {
+				if (ctr.StartDate <= pDate) {
+					Id periodId = dateToCBPeriodIdMap.get(pDate);
+					Decimal oldAmount = periodIdAmountMap.get(periodId);
+					if (oldAmount == null) oldAmount = 0;
+					periodIdAmountMap.put(periodId, oldAmount + ctr.Amount__c);
+					break;
+				}
+			}
+		}
+
+		for (cb5__CBAmount__c a : amounts) {
+			Decimal newValue = periodIdAmountMap.get(a.cb5__CBPeriod__c);
+			a.cb5__Value__c = newValue == null ? 0 : newValue;
+		}
+
+		update amounts;
+
+	}
+
+	public static void updateOpportunityWarnings(Id oppId) {
+		CBGMWarningsService.updateWarnings(new List<String>{
+				oppId
+		});
+	}
+
 }
