@@ -159,3 +159,59 @@
 /src/objects/Product2.object
 /src/objects/Solution.object
 /src/objects/User.object
+/src/flows/cb5__StandardApprovalProcess.flow
+/src/flows/cb5__StandardApprovalProcess.flow
+/src/objects/CaseComment.object
+/src/objects/cb5__CBEvent__e.object
+/src/objects/cb5__CBFolder__c.object
+/src/objects/cb5__CBInvoiceLine__c.object
+/src/objects/cb5__CBMapping__c.object
+/src/objects/cb5__CBModelingLine__c.object
+/src/objects/cb5__CBModelingRule__c.object
+/src/objects/cb5__CBTask__c.object
+/src/layouts/cb5__CBAccount__c-cb5__CB Account Layout.layout
+/src/layouts/cb5__CBAccountType__c-cb5__CB Account Type Layout.layout
+/src/layouts/cb5__CBAllocationTerm__c-cb5__CB Contract Layout.layout
+/src/layouts/cb5__CBAmount__c-cb5__CB Amount Layout.layout
+/src/layouts/cb5__CBBudgetLine__c-cb5__CB Budget Line Layout.layout
+/src/layouts/cb5__CBBudgetYear__c-cb5__CB Budget Year Layout.layout
+/src/layouts/cb5__CBCalculationRule__c-cb5__CB Calculation Rule Layout.layout
+/src/layouts/cb5__CBClusterRule__c-cb5__CB Cluster Rule Layout.layout
+/src/layouts/cb5__CBCube__c-cb5__CB Cube Layout.layout
+/src/layouts/cb5__CBDivision__c-cb5__CB Division Layout.layout
+/src/layouts/cb5__CBFolder__c-cb5__CB Folder Layout.layout
+/src/layouts/cb5__CBFunction__c-cb5__CB Function Layout.layout
+/src/layouts/cb5__CBInvoice__c-cb5__CB Invoice Layout.layout
+/src/layouts/cb5__CBInvoiceLine__c-cb5__CB Invoice Line Layout.layout
+/src/layouts/cb5__CBLayer__c-cb5__CB Layer Layout.layout
+/src/layouts/cb5__CBLog__c-cb5__CB Log Layout.layout
+/src/layouts/cb5__CBLogDetail__c-cb5__CB LogDetail Layout.layout
+/src/layouts/cb5__CBMapping__c-cb5__CB Mapping Layout.layout
+/src/layouts/cb5__CBModelingLine__c-cb5__CB Modeling Line Layout.layout
+/src/layouts/cb5__CBModelingRule__c-cb5__CB Modeling Rule Layout.layout
+/src/layouts/cb5__CBModelingRuleGroup__c-cb5__CB Modeling Rule Group Layout.layout
+/src/layouts/cb5__CBNonFinancialItem__c-cb5__Non-Financial Item Layout.layout
+/src/layouts/cb5__CBNonFinancialLibrary__c-cb5__Non-financial Library Layout.layout
+/src/layouts/cb5__CBOrgVariable__c-cb5__CB Org Variable Layout.layout
+/src/layouts/cb5__CBPeriod__c-cb5__CB Period Layout.layout
+/src/layouts/cb5__CBReport__c-cb5__CB Report Layout.layout
+/src/layouts/cb5__CBReportColumn__c-cb5__CB Report Column Layout.layout
+/src/layouts/cb5__CBReportConfiguration__c-cb5__CB Report Configuration Layout.layout
+/src/layouts/cb5__CBRevision__c-cb5__CB Revision Layout.layout
+/src/layouts/cb5__CBScenario__c-cb5__Scenario Layout.layout
+/src/layouts/cb5__CBStyle__c-cb5__CB Style Layout.layout
+/src/layouts/cb5__CBSubAccount__c-cb5__CB Sub Account Layout.layout
+/src/layouts/cb5__CBTask__c-cb5__CB Task Layout.layout
+/src/layouts/cb5__CBTaskQueue__c-cb5__CB Task Queue Layout.layout
+/src/layouts/cb5__CBTransaction__c-cb5__CB Transaction Layout.layout
+/src/layouts/cb5__CBVariable1__c-cb5__CB Variable Layout.layout
+/src/layouts/cb5__CBVariable1__c-cb5__CB Variable 1 Layout.layout
+/src/layouts/cb5__CBVariable2__c-cb5__CB Variable 1 Layout.layout
+/src/layouts/cb5__CBVariable2__c-cb5__CB Variable 2 Layout.layout
+/src/layouts/cb5__CBVariable3__c-cb5__CB Variable 1 Layout.layout
+/src/layouts/cb5__CBVariable3__c-cb5__CB Variable 3 Layout.layout
+/src/layouts/cb5__CBVariable4__c-cb5__CB Variable 1 Layout.layout
+/src/layouts/cb5__CBVariable4__c-cb5__CB Variable 4 Layout.layout
+/src/layouts/cb5__CBVariable5__c-cb5__CB Variable 1 Layout.layout
+/src/layouts/cb5__CBVariable5__c-cb5__CB Variable 5 Layout.layout
+/src/layouts/cb5__CBWelcome__c-cb5__CB Welcome Layout.layout

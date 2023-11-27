@@ -1,39 +1,698 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
-        <members>*</members>
+        <members>CBGMConst</members>
+        <members>CBGMFundBalanceBatch</members>
+        <members>CBGMFundBalanceService</members>
+        <members>CBGMFundPageController</members>
+        <members>CBGMGrantPageController</members>
+        <members>CBGMLockBudgetAction</members>
+        <members>CBGMOpportunityDomain</members>
+        <members>CBGMTest</members>
+        <members>CBGMUnlockBudgetAction</members>
+        <members>CBGMWarningsService</members>
         <name>ApexClass</name>
     </types>
     <types>
-        <members>*</members>
-        <name>ApexComponent</name>
-    </types>
-    <types>
-        <members>*</members>
-        <name>ApexPage</name>
-    </types>
-    <types>
-        <members>*</members>
+        <members>CBGMOpportunityTrigger</members>
         <name>ApexTrigger</name>
     </types>
     <types>
-        <members>*</members>
-        <name>AuraDefinitionBundle</name>
+        <members>Account.Active__c</members>
+        <members>Account.CustomerPriority__c</members>
+        <members>Account.NumberofLocations__c</members>
+        <members>Account.SLAExpirationDate__c</members>
+        <members>Account.SLASerialNumber__c</members>
+        <members>Account.SLA__c</members>
+        <members>Account.UpsellOpportunity__c</members>
+        <members>Case.EngineeringReqNumber__c</members>
+        <members>Case.PotentialLiability__c</members>
+        <members>Case.Product__c</members>
+        <members>Case.SLAViolation__c</members>
+        <members>CaseComment.CommentBody</members>
+        <members>CaseComment.ParentOrigin</members>
+        <members>Contact.Languages__c</members>
+        <members>Contact.Level__c</members>
+        <members>Goal.OrigGoalId__c</members>
+        <members>Lead.CurrentGenerators__c</members>
+        <members>Lead.NumberofLocations__c</members>
+        <members>Lead.Primary__c</members>
+        <members>Lead.ProductInterest__c</members>
+        <members>Lead.SICCode__c</members>
+        <members>Metric.OrigMetricId__c</members>
+        <members>Opportunity.CurrentGenerators__c</members>
+        <members>Opportunity.DeliveryInstallationStatus__c</members>
+        <members>Opportunity.MainCompetitors__c</members>
+        <members>Opportunity.OrderNumber__c</members>
+        <members>Opportunity.TrackingNumber__c</members>
+        <members>cb5__CBAccountType__c.cb5__CBStyle__c</members>
+        <members>cb5__CBAccountType__c.cb5__ExtId__c</members>
+        <members>cb5__CBAccountType__c.cb5__Index__c</members>
+        <members>cb5__CBAccountType__c.cb5__OrderNumber__c</members>
+        <members>cb5__CBAccountType__c.cb5__Sign__c</members>
+        <members>cb5__CBAccount__c.cb5__CBAccountType__c</members>
+        <members>cb5__CBAccount__c.cb5__CBSubAccount__c</members>
+        <members>cb5__CBAccount__c.cb5__Code__c</members>
+        <members>cb5__CBAccount__c.cb5__ExtId__c</members>
+        <members>cb5__CBAccount__c.cb5__Index__c</members>
+        <members>cb5__CBAllocationTerm__c.cb5__CBCalculationRule__c</members>
+        <members>cb5__CBAllocationTerm__c.cb5__Part__c</members>
+        <members>cb5__CBAllocationTerm__c.cb5__PeriodUnit__c</members>
+        <members>cb5__CBAllocationTerm__c.cb5__Shift__c</members>
+        <members>cb5__CBAmount__c.cb5__CBBudgetLine__c</members>
+        <members>cb5__CBAmount__c.cb5__CBBudgetYearSet__c</members>
+        <members>cb5__CBAmount__c.cb5__CBBudgetYear__c</members>
+        <members>cb5__CBAmount__c.cb5__CBKey__c</members>
+        <members>cb5__CBAmount__c.cb5__CBPeriod__c</members>
+        <members>cb5__CBAmount__c.cb5__CBStyleName__c</members>
+        <members>cb5__CBAmount__c.cb5__CBStyle__c</members>
+        <members>cb5__CBAmount__c.cb5__Description__c</members>
+        <members>cb5__CBAmount__c.cb5__PeriodName__c</members>
+        <members>cb5__CBAmount__c.cb5__ScenarioName__c</members>
+        <members>cb5__CBAmount__c.cb5__Value__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__APAheadTrigger__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__APBackTrigger__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__APHaveAccessToAhead__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__APHaveAccessToBack__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__APNextStatusName__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__APPreviousStatusName__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__Buttontitle__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__CBAccountSign__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__CBAccountType__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__CBAccount__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__CBBudgetYear__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__CBCalculationRule__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__CBDivision__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__CBKey__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__CBOwnerName__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__CBScenario__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__CBSubAccountName__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__CBVariable1__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__CBVariable2__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__CBVariable3__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__CBVariable4__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__CBVariable5__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__Code__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__Description__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__DrillDownIds__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__Index__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__Lock__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__NFL1__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__NFL2__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__NFL3__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__NFL4__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__NFL5__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__NFLFormula__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__ParentBudgetLine__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__Status__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__User__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__Value__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__WarningMessage__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__isAllocation__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__isFormulaBudgetLine__c</members>
+        <members>cb5__CBBudgetLine__c.cb5__isTopdown__c</members>
+        <members>cb5__CBBudgetYear__c.cb5__End__c</members>
+        <members>cb5__CBBudgetYear__c.cb5__ExtId__c</members>
+        <members>cb5__CBBudgetYear__c.cb5__Start__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__CBAccount__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__CBBudgetYear__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__CBDivision__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__CBFolder__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__CBScenario__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__CBVariable1__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__CBVariable2__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__CBVariable3__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__CBVariable4__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__CBVariable5__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__Description__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__Formula__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__Mode__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__NFL1__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__PeriodShift__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__ResultName__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__SourceChildFilter__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__SourceParentFilter__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__Value__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__copyAccount__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__copyBudgetYear__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__copyDivision__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__copyScenario__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__copyVariable1__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__copyVariable2__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__copyVariable3__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__copyVariable4__c</members>
+        <members>cb5__CBCalculationRule__c.cb5__copyVariable5__c</members>
+        <members>cb5__CBClusterRule__c.cb5__Index__c</members>
+        <members>cb5__CBClusterRule__c.cb5__Level1__c</members>
+        <members>cb5__CBClusterRule__c.cb5__Level2__c</members>
+        <members>cb5__CBClusterRule__c.cb5__Level3__c</members>
+        <members>cb5__CBClusterRule__c.cb5__Level4__c</members>
+        <members>cb5__CBClusterRule__c.cb5__Level5__c</members>
+        <members>cb5__CBCube__c.cb5__AccSubType__c</members>
+        <members>cb5__CBCube__c.cb5__AccType__c</members>
+        <members>cb5__CBCube__c.cb5__Actual__c</members>
+        <members>cb5__CBCube__c.cb5__Budget__c</members>
+        <members>cb5__CBCube__c.cb5__CBAccount__c</members>
+        <members>cb5__CBCube__c.cb5__CBBudgetYear__c</members>
+        <members>cb5__CBCube__c.cb5__CBDivision__c</members>
+        <members>cb5__CBCube__c.cb5__CBKey__c</members>
+        <members>cb5__CBCube__c.cb5__CBPeriod__c</members>
+        <members>cb5__CBCube__c.cb5__CBScenario__c</members>
+        <members>cb5__CBCube__c.cb5__CBVariable1__c</members>
+        <members>cb5__CBCube__c.cb5__CBVariable2__c</members>
+        <members>cb5__CBCube__c.cb5__CBVariable3__c</members>
+        <members>cb5__CBCube__c.cb5__CBVariable4__c</members>
+        <members>cb5__CBCube__c.cb5__CBVariable5__c</members>
+        <members>cb5__CBCube__c.cb5__Diff__c</members>
+        <members>cb5__CBCube__c.cb5__DrillDownIds__c</members>
+        <members>cb5__CBCube__c.cb5__Sign__c</members>
+        <members>cb5__CBDivision__c.cb5__ExtId__c</members>
+        <members>cb5__CBDivision__c.cb5__Index__c</members>
+        <members>cb5__CBEvent__e.cb5__Description__c</members>
+        <members>cb5__CBEvent__e.cb5__Status__c</members>
+        <members>cb5__CBFolder__c.cb5__CBFolder__c</members>
+        <members>cb5__CBFolder__c.cb5__FolderType__c</members>
+        <members>cb5__CBFunction__c.cb5__CBAccount__c</members>
+        <members>cb5__CBFunction__c.cb5__CBDivision__c</members>
+        <members>cb5__CBFunction__c.cb5__CBOwner__c</members>
+        <members>cb5__CBFunction__c.cb5__CBVariable1__c</members>
+        <members>cb5__CBFunction__c.cb5__CBVariable2__c</members>
+        <members>cb5__CBFunction__c.cb5__CBVariable3__c</members>
+        <members>cb5__CBFunction__c.cb5__CBVariable4__c</members>
+        <members>cb5__CBFunction__c.cb5__CBVariable5__c</members>
+        <members>cb5__CBFunction__c.cb5__Details__c</members>
+        <members>cb5__CBFunction__c.cb5__Index__c</members>
+        <members>cb5__CBFunction__c.cb5__NFL1__c</members>
+        <members>cb5__CBFunction__c.cb5__NFL2__c</members>
+        <members>cb5__CBFunction__c.cb5__NFL3__c</members>
+        <members>cb5__CBFunction__c.cb5__NFL4__c</members>
+        <members>cb5__CBFunction__c.cb5__NFL5__c</members>
+        <members>cb5__CBFunction__c.cb5__NFLFormula__c</members>
+        <members>cb5__CBFunction__c.cb5__Title__c</members>
+        <members>cb5__CBFunction__c.cb5__Type__c</members>
+        <members>cb5__CBInvoiceLine__c.cb5__Amount__c</members>
+        <members>cb5__CBInvoiceLine__c.cb5__CBInvoice__c</members>
+        <members>cb5__CBInvoiceLine__c.cb5__CBKey__c</members>
+        <members>cb5__CBInvoiceLine__c.cb5__Details__c</members>
+        <members>cb5__CBInvoiceLine__c.cb5__ExtId__c</members>
+        <members>cb5__CBInvoiceLine__c.cb5__Index__c</members>
+        <members>cb5__CBInvoice__c.cb5__CBAccountSign__c</members>
+        <members>cb5__CBInvoice__c.cb5__CBAccount__c</members>
+        <members>cb5__CBInvoice__c.cb5__CBBudgetYear__c</members>
+        <members>cb5__CBInvoice__c.cb5__CBDivision__c</members>
+        <members>cb5__CBInvoice__c.cb5__CBKey__c</members>
+        <members>cb5__CBInvoice__c.cb5__CBPeriod__c</members>
+        <members>cb5__CBInvoice__c.cb5__CBVariable1__c</members>
+        <members>cb5__CBInvoice__c.cb5__CBVariable2__c</members>
+        <members>cb5__CBInvoice__c.cb5__CBVariable3__c</members>
+        <members>cb5__CBInvoice__c.cb5__CBVariable4__c</members>
+        <members>cb5__CBInvoice__c.cb5__CBVariable5__c</members>
+        <members>cb5__CBInvoice__c.cb5__Description__c</members>
+        <members>cb5__CBInvoice__c.cb5__ExtId__c</members>
+        <members>cb5__CBInvoice__c.cb5__Index__c</members>
+        <members>cb5__CBInvoice__c.cb5__InvoiceDate__c</members>
+        <members>cb5__CBInvoice__c.cb5__Total__c</members>
+        <members>cb5__CBLayer__c.cb5__Unit__c</members>
+        <members>cb5__CBLogDetail__c.cb5__Description__c</members>
+        <members>cb5__CBLogDetail__c.cb5__Parent__c</members>
+        <members>cb5__CBLogDetail__c.cb5__Reason__c</members>
+        <members>cb5__CBLog__c.cb5__Action__c</members>
+        <members>cb5__CBLog__c.cb5__Description__c</members>
+        <members>cb5__CBLog__c.cb5__Index__c</members>
+        <members>cb5__CBLog__c.cb5__JobId__c</members>
+        <members>cb5__CBLog__c.cb5__LogNumber__c</members>
+        <members>cb5__CBLog__c.cb5__Parent__c</members>
+        <members>cb5__CBLog__c.cb5__Reason__c</members>
+        <members>cb5__CBLog__c.cb5__Source__c</members>
+        <members>cb5__CBLog__c.cb5__Status__c</members>
+        <members>cb5__CBLog__c.cb5__Title__c</members>
+        <members>cb5__CBLog__c.cb5__Type__c</members>
+        <members>cb5__CBMapping__c.cb5__ResultSObject__c</members>
+        <members>cb5__CBMapping__c.cb5__ResultType__c</members>
+        <members>cb5__CBMapping__c.cb5__SourceFilter__c</members>
+        <members>cb5__CBMapping__c.cb5__SourceName__c</members>
+        <members>cb5__CBMapping__c.cb5__SourceSObject__c</members>
+        <members>cb5__CBMapping__c.cb5__SourceSubtype__c</members>
+        <members>cb5__CBMapping__c.cb5__SourceType__c</members>
+        <members>cb5__CBMapping__c.cb5__SpecialFilter__c</members>
+        <members>cb5__CBMapping__c.cb5__Type__c</members>
+        <members>cb5__CBModelingLine__c.cb5__CBModelingRule__c</members>
+        <members>cb5__CBModelingLine__c.cb5__Default__c</members>
+        <members>cb5__CBModelingLine__c.cb5__ResultFieldFrom__c</members>
+        <members>cb5__CBModelingLine__c.cb5__ResultField__c</members>
+        <members>cb5__CBModelingLine__c.cb5__ResultObjectType__c</members>
+        <members>cb5__CBModelingLine__c.cb5__SourceFieldFrom__c</members>
+        <members>cb5__CBModelingLine__c.cb5__SourceField__c</members>
+        <members>cb5__CBModelingLine__c.cb5__SourceObjectType__c</members>
+        <members>cb5__CBModelingLine__c.cb5__SpecifyDefault__c</members>
+        <members>cb5__CBModelingLine__c.cb5__Type__c</members>
+        <members>cb5__CBModelingLine__c.cb5__isGlobal__c</members>
+        <members>cb5__CBModelingRuleGroup__c.cb5__CBFolder__c</members>
+        <members>cb5__CBModelingRuleGroup__c.cb5__DeleteOldResults__c</members>
+        <members>cb5__CBModelingRuleGroup__c.cb5__Label__c</members>
+        <members>cb5__CBModelingRuleGroup__c.cb5__StoreDrillDown__c</members>
+        <members>cb5__CBModelingRule__c.cb5__CBModelingRuleGroup__c</members>
+        <members>cb5__CBModelingRule__c.cb5__ComplexFilterCondition__c</members>
+        <members>cb5__CBModelingRule__c.cb5__Description__c</members>
+        <members>cb5__CBModelingRule__c.cb5__KeyFields__c</members>
+        <members>cb5__CBModelingRule__c.cb5__Mode__c</members>
+        <members>cb5__CBModelingRule__c.cb5__MultilevelResult__c</members>
+        <members>cb5__CBModelingRule__c.cb5__MultilevelSource__c</members>
+        <members>cb5__CBModelingRule__c.cb5__PeriodShift__c</members>
+        <members>cb5__CBModelingRule__c.cb5__ResultChildFilter__c</members>
+        <members>cb5__CBModelingRule__c.cb5__ResultParentFilter__c</members>
+        <members>cb5__CBModelingRule__c.cb5__ResultRecordChildType__c</members>
+        <members>cb5__CBModelingRule__c.cb5__ResultRecordParentType__c</members>
+        <members>cb5__CBModelingRule__c.cb5__SourceChildFilter__c</members>
+        <members>cb5__CBModelingRule__c.cb5__SourceParentFilter__c</members>
+        <members>cb5__CBModelingRule__c.cb5__SourceRecordChildType__c</members>
+        <members>cb5__CBModelingRule__c.cb5__SourceRecordParentType__c</members>
+        <members>cb5__CBModelingRule__c.cb5__StoreDrillDown__c</members>
+        <members>cb5__CBNonFinancialItem__c.cb5__CBBudgetYearSet__c</members>
+        <members>cb5__CBNonFinancialItem__c.cb5__CBBudgetYear__c</members>
+        <members>cb5__CBNonFinancialItem__c.cb5__CBPeriod__c</members>
+        <members>cb5__CBNonFinancialItem__c.cb5__NonFinancialLibrary__c</members>
+        <members>cb5__CBNonFinancialItem__c.cb5__PeriodName__c</members>
+        <members>cb5__CBNonFinancialItem__c.cb5__Value__c</members>
+        <members>cb5__CBNonFinancialLibrary__c.cb5__Description__c</members>
+        <members>cb5__CBNonFinancialLibrary__c.cb5__Index__c</members>
+        <members>cb5__CBNonFinancialLibrary__c.cb5__LayerTitle__c</members>
+        <members>cb5__CBNonFinancialLibrary__c.cb5__Layer__c</members>
+        <members>cb5__CBNonFinancialLibrary__c.cb5__SingleValue__c</members>
+        <members>cb5__CBNonFinancialLibrary__c.cb5__Type__c</members>
+        <members>cb5__CBNonFinancialLibrary__c.cb5__Unit__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__AllocationIsUsing__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__ApprovalIsUsing__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__BottomUpMode__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__BudgetLineIsMultiYear__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__BudgetLineLvl1Style__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__BudgetLineLvl2Style__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__BudgetLineLvl3Style__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__BudgetLineLvl4Style__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__BudgetLineLvl5Style__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__BudgetLinesOrder__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__CBAccountLabel__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__CBBudgetYearLabel__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__CBDivisionLabel__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__CBPeriodLabel__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__CBVariable1Label__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__CBVariable2Label__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__CBVariable3Label__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__CBVariable4Label__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__CBVariable5Label__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__CalculationRuleDeletingJobSize__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__CalculationRuleJobSize__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__DeletingModeJobSize__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__Description__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__DisplayBLMNavigation__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__FormulaIsUsing__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__InitWizardJobThreshold__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__MappingProcessJobSize__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__MaxNumberOfDisplayedLines__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__ModelingRuleJobSize__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__ModelingRuleMassUpdateJobSize__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__ModelingRulePeriodShiftJobSize__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__ModelingRuleZeroingJobSize__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__NFLDefaultListSize__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__NonFinancialLibIsUsing__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__OnlyFormulaAnalytics__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__PeriodValidationEnabled__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__ScenarioIsUsing__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__ShowSummaryInTab__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__TopdownModeIsUsing__c</members>
+        <members>cb5__CBOrgVariable__c.cb5__TopdownTolerance__c</members>
+        <members>cb5__CBPeriod__c.cb5__BYName__c</members>
+        <members>cb5__CBPeriod__c.cb5__CBBudgetYearSet__c</members>
+        <members>cb5__CBPeriod__c.cb5__CBBudgetYear__c</members>
+        <members>cb5__CBPeriod__c.cb5__End__c</members>
+        <members>cb5__CBPeriod__c.cb5__ExtId__c</members>
+        <members>cb5__CBPeriod__c.cb5__Start__c</members>
+        <members>cb5__CBReportColumn__c.cb5__CBPeriod__c</members>
+        <members>cb5__CBReportColumn__c.cb5__CBReport__c</members>
+        <members>cb5__CBReportColumn__c.cb5__CBStyle__c</members>
+        <members>cb5__CBReportColumn__c.cb5__Color__c</members>
+        <members>cb5__CBReportColumn__c.cb5__FontStyle__c</members>
+        <members>cb5__CBReportColumn__c.cb5__Formula__c</members>
+        <members>cb5__CBReportColumn__c.cb5__MasterColumn__c</members>
+        <members>cb5__CBReportColumn__c.cb5__NeedYTD__c</members>
+        <members>cb5__CBReportColumn__c.cb5__OrderNumber__c</members>
+        <members>cb5__CBReportColumn__c.cb5__Type__c</members>
+        <members>cb5__CBReportColumn__c.cb5__Unit__c</members>
+        <members>cb5__CBReportColumn__c.cb5__ValueField__c</members>
+        <members>cb5__CBReportColumn__c.cb5__isHidden__c</members>
+        <members>cb5__CBReportConfiguration__c.cb5__CBReport__c</members>
+        <members>cb5__CBReportConfiguration__c.cb5__Description__c</members>
+        <members>cb5__CBReportConfiguration__c.cb5__DisplayUnits__c</members>
+        <members>cb5__CBReportConfiguration__c.cb5__Filter__c</members>
+        <members>cb5__CBReportConfiguration__c.cb5__FloatPointCell__c</members>
+        <members>cb5__CBReportConfiguration__c.cb5__Grouping__c</members>
+        <members>cb5__CBReportConfiguration__c.cb5__SubtotalNumber__c</members>
+        <members>cb5__CBReport__c.cb5__CBFolder__c</members>
+        <members>cb5__CBReport__c.cb5__Description__c</members>
+        <members>cb5__CBReport__c.cb5__Filter__c</members>
+        <members>cb5__CBReport__c.cb5__Grouping__c</members>
+        <members>cb5__CBReport__c.cb5__Mode__c</members>
+        <members>cb5__CBReport__c.cb5__needOnlyTotal__c</members>
+        <members>cb5__CBReport__c.cb5__needQuarterTotals__c</members>
+        <members>cb5__CBReport__c.cb5__oneColumnMode__c</members>
+        <members>cb5__CBRevision__c.cb5__Body__c</members>
+        <members>cb5__CBRevision__c.cb5__Description__c</members>
+        <members>cb5__CBRevision__c.cb5__Index__c</members>
+        <members>cb5__CBRevision__c.cb5__Note__c</members>
+        <members>cb5__CBRevision__c.cb5__Parent__c</members>
+        <members>cb5__CBScenario__c.cb5__CBStyle__c</members>
+        <members>cb5__CBStyle__c.cb5__BackgroundColor__c</members>
+        <members>cb5__CBStyle__c.cb5__CSS__c</members>
+        <members>cb5__CBStyle__c.cb5__Color__c</members>
+        <members>cb5__CBStyle__c.cb5__FontWeight__c</members>
+        <members>cb5__CBStyle__c.cb5__Font__c</members>
+        <members>cb5__CBStyle__c.cb5__State__c</members>
+        <members>cb5__CBSubAccount__c.cb5__CBParentSubAccount__c</members>
+        <members>cb5__CBSubAccount__c.cb5__Code__c</members>
+        <members>cb5__CBSubAccount__c.cb5__ExtId__c</members>
+        <members>cb5__CBSubAccount__c.cb5__Index__c</members>
+        <members>cb5__CBTaskQueue__c.cb5__Description__c</members>
+        <members>cb5__CBTaskQueue__c.cb5__RelatedTo__c</members>
+        <members>cb5__CBTaskQueue__c.cb5__Status__c</members>
+        <members>cb5__CBTask__c.cb5__CBTaskQueue__c</members>
+        <members>cb5__CBTask__c.cb5__ClassName__c</members>
+        <members>cb5__CBTask__c.cb5__OrderNumber__c</members>
+        <members>cb5__CBTask__c.cb5__Parameter1__c</members>
+        <members>cb5__CBTask__c.cb5__Parameter2__c</members>
+        <members>cb5__CBTask__c.cb5__QueueName__c</members>
+        <members>cb5__CBTask__c.cb5__Status__c</members>
+        <members>cb5__CBTransaction__c.cb5__CBAccount__c</members>
+        <members>cb5__CBTransaction__c.cb5__CBBudgetYear__c</members>
+        <members>cb5__CBTransaction__c.cb5__CBDivision__c</members>
+        <members>cb5__CBTransaction__c.cb5__CBKey__c</members>
+        <members>cb5__CBTransaction__c.cb5__CBPeriod__c</members>
+        <members>cb5__CBTransaction__c.cb5__CBVariable1__c</members>
+        <members>cb5__CBTransaction__c.cb5__CBVariable2__c</members>
+        <members>cb5__CBTransaction__c.cb5__CBVariable3__c</members>
+        <members>cb5__CBTransaction__c.cb5__CBVariable4__c</members>
+        <members>cb5__CBTransaction__c.cb5__CBVariable5__c</members>
+        <members>cb5__CBTransaction__c.cb5__Value__c</members>
+        <members>cb5__CBVariable1__c.cb5__Code__c</members>
+        <members>cb5__CBVariable1__c.cb5__ExtId__c</members>
+        <members>cb5__CBVariable1__c.cb5__Index__c</members>
+        <members>cb5__CBVariable2__c.cb5__Code__c</members>
+        <members>cb5__CBVariable2__c.cb5__ExtId__c</members>
+        <members>cb5__CBVariable2__c.cb5__Index__c</members>
+        <members>cb5__CBVariable3__c.cb5__Code__c</members>
+        <members>cb5__CBVariable3__c.cb5__ExtId__c</members>
+        <members>cb5__CBVariable3__c.cb5__Index__c</members>
+        <members>cb5__CBVariable4__c.cb5__Code__c</members>
+        <members>cb5__CBVariable4__c.cb5__ExtId__c</members>
+        <members>cb5__CBVariable4__c.cb5__Index__c</members>
+        <members>cb5__CBVariable5__c.cb5__Code__c</members>
+        <members>cb5__CBVariable5__c.cb5__ExtId__c</members>
+        <members>cb5__CBVariable5__c.cb5__Index__c</members>
+        <members>cb5__CBWelcome__c.cb5__Content__c</members>
+        <members>cb5__CBWelcome__c.cb5__Description__c</members>
+        <members>cb5__CBWelcome__c.cb5__Header__c</members>
+        <members>cb5__CBWelcome__c.cb5__Icon__c</members>
+        <members>cb5__CBWelcome__c.cb5__Index__c</members>
+        <members>cb5__CBWelcome__c.cb5__Parent__c</members>
+        <members>cb5__CBWelcome__c.cb5__Type__c</members>
+        <name>CustomField</name>
     </types>
     <types>
-        <members>*</members>
+        <members>Account</members>
+        <members>Activity</members>
+        <members>Asset</members>
+        <members>Campaign</members>
+        <members>Case</members>
+        <members>Contact</members>
+        <members>Contract</members>
+        <members>Lead</members>
+        <members>MessagingEndUser</members>
+        <members>Opportunity</members>
+        <members>Order</members>
+        <members>Product2</members>
+        <members>Solution</members>
+        <members>User</members>
+        <members>cb5__CBAccountType__c</members>
+        <members>cb5__CBAccount__c</members>
+        <members>cb5__CBAllocationTerm__c</members>
+        <members>cb5__CBAmount__c</members>
+        <members>cb5__CBBudgetLine__c</members>
+        <members>cb5__CBBudgetYear__c</members>
+        <members>cb5__CBCalculationRule__c</members>
+        <members>cb5__CBClusterRule__c</members>
+        <members>cb5__CBCube__c</members>
+        <members>cb5__CBDivision__c</members>
+        <members>cb5__CBEvent__e</members>
+        <members>cb5__CBFolder__c</members>
+        <members>cb5__CBFunction__c</members>
+        <members>cb5__CBInvoiceLine__c</members>
+        <members>cb5__CBInvoice__c</members>
+        <members>cb5__CBLayer__c</members>
+        <members>cb5__CBLogDetail__c</members>
+        <members>cb5__CBLog__c</members>
+        <members>cb5__CBMapping__c</members>
+        <members>cb5__CBModelingLine__c</members>
+        <members>cb5__CBModelingRuleGroup__c</members>
+        <members>cb5__CBModelingRule__c</members>
+        <members>cb5__CBNonFinancialItem__c</members>
+        <members>cb5__CBNonFinancialLibrary__c</members>
+        <members>cb5__CBOrgVariable__c</members>
+        <members>cb5__CBPeriod__c</members>
+        <members>cb5__CBReportColumn__c</members>
+        <members>cb5__CBReportConfiguration__c</members>
+        <members>cb5__CBReport__c</members>
+        <members>cb5__CBRevision__c</members>
+        <members>cb5__CBScenario__c</members>
+        <members>cb5__CBStyle__c</members>
+        <members>cb5__CBSubAccount__c</members>
+        <members>cb5__CBTaskQueue__c</members>
+        <members>cb5__CBTask__c</members>
+        <members>cb5__CBTransaction__c</members>
+        <members>cb5__CBVariable1__c</members>
+        <members>cb5__CBVariable2__c</members>
+        <members>cb5__CBVariable3__c</members>
+        <members>cb5__CBVariable4__c</members>
+        <members>cb5__CBVariable5__c</members>
+        <members>cb5__CBWelcome__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>ContactCenter_UtilityBar</members>
+        <members>CrisisCenter_UtilityBar</members>
+        <members>LightningSalesConsole_UtilityBar</members>
+        <members>LightningSales_UtilityBar</members>
+        <members>LightningService_UtilityBar</members>
+        <members>Opportunity_Record_Page</members>
+        <members>Opportunity_Record_Page1</members>
+        <members>RevenueCloudConsole_UtilityBar</members>
         <name>FlexiPage</name>
     </types>
     <types>
-        <members>*</members>
+        <members>CB_GM_Grant_Approval_Rule</members>
+        <members>cb5__StandardApprovalProcess</members>
         <name>Flow</name>
     </types>
     <types>
-        <members>*</members>
+        <members>Account-Account %28Marketing%29 Layout</members>
+        <members>Account-Account %28Sales%29 Layout</members>
+        <members>Account-Account %28Support%29 Layout</members>
+        <members>Account-Account Layout</members>
+        <members>AlternativePaymentMethod-Alternative Payment Method Layout</members>
+        <members>ApiAnomalyEventStore-API Anomaly Event Store Layout</members>
+        <members>AppointmentInvitation-Appointment Invitation Layout</members>
+        <members>Asset-Asset Layout</members>
+        <members>AssetAction-Asset Action Layout</members>
+        <members>AssetActionSource-Asset Action Source Layout</members>
+        <members>AssetRelationship-Asset Relationship Layout</members>
+        <members>AssetStatePeriod-Asset State Period Layout</members>
+        <members>AssignedResource-Assigned Resource Layout</members>
+        <members>AuthorizationForm-Authorization Form Layout</members>
+        <members>AuthorizationFormConsent-Authorization Form Consent Layout</members>
+        <members>AuthorizationFormDataUse-Authorization Form Data Use Layout</members>
+        <members>AuthorizationFormText-Authorization Form Text Layout</members>
+        <members>BusinessBrand-Business Brand Layout</members>
+        <members>Campaign-Campaign Layout</members>
+        <members>CampaignMember-Campaign Member Page Layout</members>
+        <members>CardPaymentMethod-Card Payment Method Layout</members>
+        <members>CartCheckoutSession-Cart Checkout Session Layout</members>
+        <members>CartDeliveryGroup-Cart Delivery Group Layout</members>
+        <members>CartDeliveryGroupMethod-Cart Delivery Group Method Layout</members>
+        <members>CartItem-Cart Item Layout</members>
+        <members>CartTax-Cart Tax Layout</members>
+        <members>CartValidationOutput-Cart Validation Output Layout</members>
+        <members>Case-Case %28Marketing%29 Layout</members>
+        <members>Case-Case %28Sales%29 Layout</members>
+        <members>Case-Case %28Support%29 Layout</members>
+        <members>Case-Case Layout</members>
+        <members>CaseClose-Close Case Layout</members>
+        <members>CaseMilestone-Case Milestone Layout</members>
+        <members>CommunityMemberLayout-Community Member Layout</members>
+        <members>ConsumptionRate-Consumption Rate Layout</members>
+        <members>ConsumptionSchedule-Consumption Schedule Layout</members>
+        <members>Contact-Contact %28Marketing%29 Layout</members>
+        <members>Contact-Contact %28Sales%29 Layout</members>
+        <members>Contact-Contact %28Support%29 Layout</members>
+        <members>Contact-Contact Layout</members>
+        <members>ContactPointAddress-Contact Point Address Layout</members>
+        <members>ContactPointEmail-Contact Point Email Layout</members>
+        <members>ContactPointPhone-Contact Point Phone Layout</members>
+        <members>ContactPointTypeConsent-Contact Point Type Consent Layout</members>
+        <members>ContentVersion-Content Version Layout</members>
+        <members>Contract-Contract Layout</members>
+        <members>ContractLineItem-Contract Line Item Layout</members>
+        <members>CredentialStuffingEventStore-Credential Stuffing Event Store Layout</members>
+        <members>CreditMemo-Credit Memo Layout</members>
+        <members>CreditMemoInvApplication-Credit Memo Invoice Application Layout</members>
+        <members>CreditMemoLine-Credit Memo Line Layout</members>
+        <members>Customer-Customer Layout</members>
+        <members>DandBCompany-D%26B Company Layout</members>
+        <members>DataUseLegalBasis-Data Use Legal Basis Layout</members>
+        <members>DataUsePurpose-Data Use Purpose Layout</members>
+        <members>DigitalWallet-Digital Wallet Layout</members>
+        <members>DuplicateRecordSet-Duplicate Record Set Layout</members>
+        <members>EmailMessage-Email Message Layout</members>
+        <members>EngagementChannelType-Engagement Channel Type Layout</members>
+        <members>Entitlement-Entitlement Layout</members>
+        <members>EntityMilestone-Object Milestone Layout</members>
+        <members>Event-Event Layout</members>
+        <members>FeedItem-Feed Item Layout</members>
+        <members>FinanceBalanceSnapshot-Finance Balance Snapshot Layout</members>
+        <members>FinanceTransaction-Finance Transaction Layout</members>
+        <members>Global-Global Layout</members>
+        <members>Idea-Idea Layout</members>
+        <members>Individual-Individual Layout</members>
+        <members>Invoice-Invoice Layout</members>
+        <members>InvoiceLine-Invoice Line Layout</members>
+        <members>Lead-Lead %28Marketing%29 Layout</members>
+        <members>Lead-Lead %28Sales%29 Layout</members>
+        <members>Lead-Lead %28Support%29 Layout</members>
+        <members>Lead-Lead Layout</members>
+        <members>LegalEntity-Legal Entity Layout</members>
+        <members>Macro-Macro Layout</members>
+        <members>OperatingHours-Operating Hours Layout</members>
+        <members>Opportunity-Fund</members>
+        <members>Opportunity-Grant</members>
+        <members>Opportunity-Opportunity %28Marketing%29 Layout</members>
+        <members>Opportunity-Opportunity %28Sales%29 Layout</members>
+        <members>Opportunity-Opportunity %28Support%29 Layout</members>
+        <members>Opportunity-Opportunity Layout</members>
+        <members>OpportunityLineItem-Opportunity Product Layout</members>
+        <members>Order-Order Layout</members>
+        <members>OrderItem-Order Product Layout</members>
+        <members>Payment-Payment Layout</members>
+        <members>PaymentAuthAdjustment-Payment Authorization Adjustment Layout</members>
+        <members>PaymentAuthorization-Payment Authorization Layout</members>
+        <members>PaymentGateway-Payment Gateway Layout</members>
+        <members>PaymentGatewayLog-Payment Gateway Log Layout</members>
+        <members>PaymentGroup-Payment Group Layout</members>
+        <members>PaymentLineInvoice-Payment Line Invoice Layout</members>
+        <members>Pricebook2-Price Book Layout</members>
+        <members>PricebookEntry-Price Book Entry Layout</members>
+        <members>ProcessException-Process Exception Layout</members>
+        <members>Product2-Product Layout</members>
+        <members>ProductConsumptionSchedule-Product Consumption Schedule Layout</members>
+        <members>QuickText-Quick Text Layout</members>
+        <members>Refund-Refund Layout</members>
+        <members>RefundLinePayment-Refund Line Payment Layout</members>
+        <members>ReportAnomalyEventStore-Report Anomaly Event Store Layout</members>
+        <members>ResourceAbsence-Resource Absence Layout</members>
+        <members>ResourcePreference-Resource Preference Layout</members>
+        <members>ReturnOrder-Return Order Layout</members>
+        <members>ReturnOrderItemAdjustment-Return Order Item Adjustment Layout</members>
+        <members>ReturnOrderItemTax-Return Order Item Tax Layout</members>
+        <members>ReturnOrderLineItem-Return Order Line Item Layout</members>
+        <members>Scorecard-Scorecard Layout</members>
+        <members>ScorecardAssociation-Scorecard Association Layout</members>
+        <members>ScorecardMetric-Scorecard Metric Layout</members>
+        <members>Seller-Seller Layout</members>
+        <members>ServiceAppointment-Service Appointment Layout</members>
+        <members>ServiceContract-Service Contract Layout</members>
+        <members>ServiceResource-Service Resource Layout</members>
+        <members>ServiceResourceSkill-Service Resource Skill Layout</members>
+        <members>ServiceTerritory-Service Territory Layout</members>
+        <members>ServiceTerritoryMember-Service Territory Member Layout</members>
+        <members>SessionHijackingEventStore-Session Hijacking Event Store Layout</members>
+        <members>Shift-Shift Layout</members>
+        <members>ShiftWorkTopic-%5F%5FMISSING LABEL%5F%5F PropertyFile - val ShiftWorkTopic not found in section StandardLayouts</members>
+        <members>SkillRequirement-Skill Requirement Layout</members>
+        <members>SocialPersona-Social Persona Layout</members>
+        <members>Solution-Solution Layout</members>
+        <members>Task-Task Layout</members>
+        <members>ThreatDetectionFeedback-Threat Detection Feedback Layout</members>
+        <members>TimeSlot-Time Slot Layout</members>
+        <members>User-User Layout</members>
+        <members>UserAlt-User Profile Layout</members>
+        <members>UserProvAccount-User Provisioning Account Layout</members>
+        <members>UserProvisioningLog-User Provisioning Log Layout</members>
+        <members>UserProvisioningRequest-User Provisioning Request Layout</members>
+        <members>Waitlist-%5F%5FMISSING LABEL%5F%5F PropertyFile - val Waitlist not found in section StandardLayouts</members>
+        <members>WebCart-Cart Layout</members>
+        <members>WebCartAdjustmentBasis-Cart Adjustment Basis Layout</members>
+        <members>WebCartAdjustmentGroup-Cart Adjustment Group Layout</members>
+        <members>WebStore-Store Layout</members>
+        <members>WorkOrder-Work Order Layout</members>
+        <members>WorkOrderLineItem-Work Order Line Item Layout</members>
+        <members>WorkPlan-Work Plan Layout</members>
+        <members>WorkPlanTemplate-Work Plan Template Layout</members>
+        <members>WorkPlanTemplateEntry-Work Plan Template Entry Layout</members>
+        <members>WorkStep-Work Step Layout</members>
+        <members>WorkStepTemplate-Work Step Template Layout</members>
+        <members>WorkType-Work Type Layout</members>
+        <members>WorkTypeGroup-Work Type Group Layout</members>
+        <members>WorkTypeGroupMember-Work Type Group Member Layout</members>
+        <members>cb5__CBAccountType__c-cb5__CB Account Type Layout</members>
+        <members>cb5__CBAccount__c-cb5__CB Account Layout</members>
+        <members>cb5__CBAllocationTerm__c-cb5__CB Contract Layout</members>
+        <members>cb5__CBAmount__c-cb5__CB Amount Layout</members>
+        <members>cb5__CBBudgetLine__c-cb5__CB Budget Line Layout</members>
+        <members>cb5__CBBudgetYear__c-cb5__CB Budget Year Layout</members>
+        <members>cb5__CBCalculationRule__c-cb5__CB Calculation Rule Layout</members>
+        <members>cb5__CBClusterRule__c-cb5__CB Cluster Rule Layout</members>
+        <members>cb5__CBCube__c-cb5__CB Cube Layout</members>
+        <members>cb5__CBDivision__c-cb5__CB Division Layout</members>
+        <members>cb5__CBFolder__c-cb5__CB Folder Layout</members>
+        <members>cb5__CBFunction__c-cb5__CB Function Layout</members>
+        <members>cb5__CBInvoiceLine__c-cb5__CB Invoice Line Layout</members>
+        <members>cb5__CBInvoice__c-cb5__CB Invoice Layout</members>
+        <members>cb5__CBLayer__c-cb5__CB Layer Layout</members>
+        <members>cb5__CBLogDetail__c-cb5__CB LogDetail Layout</members>
+        <members>cb5__CBLog__c-cb5__CB Log Layout</members>
+        <members>cb5__CBMapping__c-cb5__CB Mapping Layout</members>
+        <members>cb5__CBModelingLine__c-cb5__CB Modeling Line Layout</members>
+        <members>cb5__CBModelingRuleGroup__c-cb5__CB Modeling Rule Group Layout</members>
+        <members>cb5__CBModelingRule__c-cb5__CB Modeling Rule Layout</members>
+        <members>cb5__CBNonFinancialItem__c-cb5__Non-Financial Item Layout</members>
+        <members>cb5__CBNonFinancialLibrary__c-cb5__Non-financial Library Layout</members>
+        <members>cb5__CBOrgVariable__c-cb5__CB Org Variable Layout</members>
+        <members>cb5__CBPeriod__c-cb5__CB Period Layout</members>
+        <members>cb5__CBReportColumn__c-cb5__CB Report Column Layout</members>
+        <members>cb5__CBReportConfiguration__c-cb5__CB Report Configuration Layout</members>
+        <members>cb5__CBReport__c-cb5__CB Report Layout</members>
+        <members>cb5__CBRevision__c-cb5__CB Revision Layout</members>
+        <members>cb5__CBScenario__c-cb5__Scenario Layout</members>
+        <members>cb5__CBStyle__c-cb5__CB Style Layout</members>
+        <members>cb5__CBSubAccount__c-cb5__CB Sub Account Layout</members>
+        <members>cb5__CBTaskQueue__c-cb5__CB Task Queue Layout</members>
+        <members>cb5__CBTask__c-cb5__CB Task Layout</members>
+        <members>cb5__CBTransaction__c-cb5__CB Transaction Layout</members>
+        <members>cb5__CBVariable1__c-cb5__CB Variable 1 Layout</members>
+        <members>cb5__CBVariable1__c-cb5__CB Variable Layout</members>
+        <members>cb5__CBVariable2__c-cb5__CB Variable 1 Layout</members>
+        <members>cb5__CBVariable2__c-cb5__CB Variable 2 Layout</members>
+        <members>cb5__CBVariable3__c-cb5__CB Variable 1 Layout</members>
+        <members>cb5__CBVariable3__c-cb5__CB Variable 3 Layout</members>
+        <members>cb5__CBVariable4__c-cb5__CB Variable 1 Layout</members>
+        <members>cb5__CBVariable4__c-cb5__CB Variable 4 Layout</members>
+        <members>cb5__CBVariable5__c-cb5__CB Variable 1 Layout</members>
+        <members>cb5__CBVariable5__c-cb5__CB Variable 5 Layout</members>
+        <members>cb5__CBWelcome__c-cb5__CB Welcome Layout</members>
         <name>Layout</name>
     </types>
     <types>
-        <members>*</members>
+        <members>cbFindBudget</members>
+        <members>cbFundBudget</members>
+        <members>cbGrantBudget</members>
+        <members>cbSpinner</members>
+        <members>cbUtils</members>
         <name>LightningComponentBundle</name>
     </types>
     <types>
@@ -126,14 +785,6 @@
         <members>MessagingEndUser.BulkMessageMessagingEndUsers</members>
         <members>OperatingHours.All_OperatingHours</members>
         <members>Opportunity.AllOpportunities</members>
-        <members>Opportunity.ClosingNextMonth</members>
-        <members>Opportunity.ClosingThisMonth</members>
-        <members>Opportunity.Default_Opportunity_Pipeline</members>
-        <members>Opportunity.MyOpportunities</members>
-        <members>Opportunity.NewLastWeek</members>
-        <members>Opportunity.NewThisWeek</members>
-        <members>Opportunity.Private</members>
-        <members>Opportunity.Won</members>
         <members>Order.AllActivatedOrders</members>
         <members>Order.AllDraftOrders</members>
         <members>Order.AllOrders</members>
@@ -236,10 +887,6 @@
         <members>cb5__CBVariable5__c.cb5__All</members>
         <members>cb5__CBWelcome__c.cb5__All</members>
         <name>ListView</name>
-    </types>
-    <types>
-        <members>*</members>
-        <name>StaticResource</name>
     </types>
     <version>48.0</version>
 </Package>

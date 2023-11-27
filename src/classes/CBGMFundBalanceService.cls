@@ -118,11 +118,7 @@ public with sharing class CBGMFundBalanceService {
 		List<BLWrapper> result = new List<BLWrapper>();
 		for (cb5__CBBudgetYear__c budgetYear : budgetYears) {
 			if (fundWrapper == null) continue;
-			System.debug('fundWrapper = ' + fundWrapper);
-			System.debug('budgetYear.Id = ' + budgetYear.Id);
-			System.debug('fundWrapper.amountsMap = ' + fundWrapper.amountsMap);
 			Map<String, Decimal> byFundAmountsMap = fundWrapper.amountsMap.get(budgetYear.Id);
-			//System.debug('**byFundAmountsMap (' + budgetYear.Name + ') = ' + byFundAmountsMap);
 			if (byFundAmountsMap == null) continue; // this year does not need balances
 			BLWrapper balanceWrapper = new BLWrapper();
 			result.add(balanceWrapper);
@@ -140,7 +136,6 @@ public with sharing class CBGMFundBalanceService {
 				fundAmount = fundAmount == null ? 0 : fundAmount;
 				Decimal grantAmount = byGrantAmountsMap == null || byGrantAmountsMap.get(periodId) == null ? 0 : byGrantAmountsMap.get(periodId);
 				balanceValue = balanceValue + fundAmount - grantAmount;
-				//System.debug('**P:' + periodId + ' fundAmount=' + fundAmount + ' grantAmount=' + grantAmount + ' balanceValue=' + balanceValue);
 				balanceWrapper.amounts.add(new cb5__CBAmount__c(cb5__CBPeriod__c = periodId, cb5__Value__c = balanceValue));
 			}
 		}
