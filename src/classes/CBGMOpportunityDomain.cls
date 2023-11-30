@@ -27,6 +27,11 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 public with sharing class CBGMOpportunityDomain {
 
+	/**
+	 * Method recalculates total amount for Opportunity based on lines
+	 * TODO: DRY
+	 * @param oppId
+	 */
 	public static void recalculateTotalAmounts(String oppId) {
 
 		Opportunity opportunity = [SELECT Id, RecordType.Name FROM Opportunity WHERE Id = :oppId];
@@ -36,23 +41,36 @@ public with sharing class CBGMOpportunityDomain {
 			if (vars1.size() == 0) return ;
 			cb5__CBVariable1__c var1 = vars1[0];
 			System.debug('Is Fund');
-			List<AggregateResult> ags = [
+			List<AggregateResult> committed = [
 					SELECT SUM(cb5__Value__c) cb5__Value__c
 					FROM cb5__CBAmount__c
 					WHERE cb5__CBBudgetLine__r.cb5__CBScenario__r.Name = :CBGMConst.COMMITTED_FUND_SCENARIO_NAME
 					AND cb5__CBBudgetLine__r.cb5__CBVariable1__c = :var1.Id
 			];
-			System.debug('AGS =' + ags);
-			if (ags.size() > 0) {
-				opportunity.AmountCommitted__c = (Decimal) ags[0].get('cb5__Value__c');
-				update opportunity;
-			}
+
+			List<AggregateResult> granted = [
+					SELECT SUM(cb5__Value__c) cb5__Value__c
+					FROM cb5__CBAmount__c
+					WHERE cb5__CBBudgetLine__r.cb5__CBScenario__r.Name = :CBGMConst.GRANT_PLAN_SCENARIO_NAME
+					AND cb5__CBBudgetLine__r.cb5__CBVariable1__c = :var1.Id
+			];
+			System.debug('committed =' + committed);
+			System.debug('granted =' + granted);
+			opportunity.AmountCommitted__c = opportunity.AmountAppliedFor__c = 0;
+			opportunity.AmountCommitted__c = committed.size() > 0 ? (Decimal) committed[0].get('cb5__Value__c') : 0;
+			opportunity.AmountAppliedFor__c = granted.size() > 0 ? (Decimal) granted[0].get('cb5__Value__c') : 0;
+
+			update opportunity;
 		}
 
 		if (opportunity.RecordType.Name == 'Grant') {
 			System.debug('Is GRANT');
 			List<cb5__CBVariable2__c> vars2 = [SELECT Id FROM cb5__CBVariable2__c WHERE cb5__ExtId__c = :oppId];
-			if (vars2.size() == 0) return ;
+			if (vars2.size() == 0) {
+				opportunity.Amount = 0;
+				update opportunity;
+				return ;
+			}
 			cb5__CBVariable2__c var2 = vars2[0];
 			List<AggregateResult> ags = [
 					SELECT SUM(cb5__Value__c) cb5__Value__c
@@ -78,6 +96,11 @@ public with sharing class CBGMOpportunityDomain {
 		]) oppMap.put(opp.Id, opp);
 	}
 
+	/**
+	 * Method sync Opportunity and CBVariable1 & CBVariable2
+	 * TODO: DRY
+	 * @param oppId
+	 */
 	public static void updateCBMapping(Id oppId) {
 		System.debug('Update Mapping: ' + oppId);
 		Opportunity opportunity = oppMap.get(oppId);
@@ -115,14 +138,23 @@ public with sharing class CBGMOpportunityDomain {
 		Opportunity opportunity = oppMap.get(oppId);
 		List<cb5__CBBudgetLine__c> budgetLines;
 		if (opportunity.RecordType.Name == 'Fund') {
-			budgetLines = [SELECT Id,cb5__Lock__c FROM cb5__CBBudgetLine__c WHERE cb5__CBVariable1__r.cb5__ExtId__c = :oppId];
+			budgetLines = [
+					SELECT Id,cb5__Lock__c
+					FROM cb5__CBBudgetLine__c
+					WHERE cb5__CBVariable1__r.cb5__ExtId__c = :oppId
+					AND (cb5__CBScenario__r.Name = :CBGMConst.COMMITTED_FUND_SCENARIO_NAME OR cb5__CBScenario__r.Name = :CBGMConst.BALANCE_FUND_SCENARIO_NAME)
+			];
 		}
 		if (opportunity.RecordType.Name == 'Grant') {
-			budgetLines = [SELECT Id,cb5__Lock__c FROM cb5__CBBudgetLine__c WHERE cb5__CBVariable2__r.cb5__ExtId__c = :oppId];
+			budgetLines = [
+					SELECT Id,cb5__Lock__c
+					FROM cb5__CBBudgetLine__c
+					WHERE cb5__CBVariable2__r.cb5__ExtId__c = :oppId AND cb5__CBScenario__r.Name = :CBGMConst.GRANT_PLAN_SCENARIO_NAME
+			];
 		}
 		if (budgetLines == null || budgetLines.size() == 0) return;
 		for (cb5__CBBudgetLine__c bl : budgetLines) {
-			if (bl.cb5__Lock__c != null) return;
+			if (bl.cb5__Lock__c != null) continue;
 			if (opportunity.CBAccount__c != null) bl.cb5__CBAccount__c = opportunity.CBAccount__c;
 			if (opportunity.CBDivision__c != null) bl.cb5__CBDivision__c = opportunity.CBDivision__c;
 			if (opportunity.CBVariable3__c != null) bl.cb5__CBVariable3__c = opportunity.CBVariable3__c;
@@ -134,7 +166,7 @@ public with sharing class CBGMOpportunityDomain {
 
 	public static void updateContractValues(Id oppId) {
 		List<Contract> contracts = [SELECT Amount__c,StartDate FROM Contract WHERE Opportunity__c = :oppId];
-		if (contracts.size() == null) return ;
+		if (contracts.size() == 0) return ; // it means that users do not use Contracts as a source
 		List<cb5__CBAmount__c> amounts = [SELECT Id,cb5__CBPeriod__c FROM cb5__CBAmount__c WHERE cb5__CBBudgetLine__r.cb5__CBVariable1__r.cb5__ExtId__c = :oppId AND cb5__CBBudgetLine__r.cb5__CBScenario__r.Name = :CBGMConst.COMMITTED_FUND_SCENARIO_NAME];
 		if (amounts.size() == 0) return ;
 

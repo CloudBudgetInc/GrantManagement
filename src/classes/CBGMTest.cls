@@ -29,7 +29,7 @@ public with sharing class CBGMTest {
 
 	@TestSetup
 	public static void generateInitialData() {
-		cb5__CBOrgVariable__c orgVariable = new cb5__CBOrgVariable__c();
+		/*cb5__CBOrgVariable__c orgVariable = new cb5__CBOrgVariable__c();
 		insert orgVariable;
 
 		cb5__CBBudgetYear__c budgetYear = new cb5__CBBudgetYear__c(Name = '2024', cb5__Start__c = Date.newInstance(2024, 1, 1));
@@ -57,11 +57,13 @@ public with sharing class CBGMTest {
 		scenarios.add(new cb5__CBScenario__c(Name = CBGMConst.DEFAULT_FUNDING_ACCOUNT_NAME));
 		scenarios.add(new cb5__CBScenario__c(Name = CBGMConst.BALANCE_FUND_SCENARIO_NAME));
 		scenarios.add(new cb5__CBScenario__c(Name = CBGMConst.GRANT_PLAN_SCENARIO_NAME));
-		insert scenarios;
+		insert scenarios;*/
 	}
 
 	@isTest
 	public static void testFundsAndGrants() {
+		CBGMInitController.generateInitialData();
+
 		cb5__CBBudgetYear__c budgetYear = [SELECT Id, Name FROM cb5__CBBudgetYear__c LIMIT 1][0];
 
 		Id fundRecordTypeId = Schema.SObjectType.Opportunity.getRecordTypeInfosByName().get('Fund').getRecordTypeId();
@@ -90,13 +92,16 @@ public with sharing class CBGMTest {
 
 		CBGMFundPageController.updateOpportunityByTriggerServer(fund.Id);
 		CBGMFundPageController.getAllocationGrantsServer(fund.Id);
-		CBGMFundPageController.saveFundBalanceBudgetLineServer(fundBudgetLines[0].cb5__CBAmounts__r, fund.Id, budgetYear.Id);
+		CBGMFundPageController.recalculateFundBalanceBudgetServer(fund.Id);
 
 		CBGMLockBudgetAction.cg();
 		CBGMUnlockBudgetAction.cg();
 
-		CBGMFundBalanceBatch ba = new CBGMFundBalanceBatch();
-		Id jobId = Database.executeBatch(ba, 5);
+		//CBGMFundBalanceBatch ba = new CBGMFundBalanceBatch();
+		//Id jobId = Database.executeBatch(ba, 5);
+
+		CBGMFundBalanceProcess process = new CBGMFundBalanceProcess();
+		process.runProcess(null, null);
 
 
 	}

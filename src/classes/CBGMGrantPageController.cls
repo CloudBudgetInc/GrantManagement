@@ -41,14 +41,17 @@ public with sharing class CBGMGrantPageController {
 		String destination = [SELECT Destination__c FROM Opportunity WHERE Id = :oppId][0].Destination__c;
 		Map<String, String> fundSO = new Map<String, String>();
 		r.put('fundSO', fundSO);
+		System.debug('destination = ' + destination);
 
-		if(!String.isEmpty(destination)) {
-			List<String> destSet = new List<String>(destination.split(','));
+		if (!String.isEmpty(destination)) {
+			List<String> destSet = new List<String>(destination.split(';'));
 			Set<String> fundOppIds = new Set<String>();
-			for (Opportunity fund : [SELECT Id FROM Opportunity WHERE Destination__c INCLUDES (:destination)]) fundOppIds.add(fund.Id);
+			for (Opportunity fund : [SELECT Id FROM Opportunity WHERE RecordType.Name = 'Fund' AND Destination__c INCLUDES (:destination)]) fundOppIds.add(fund.Id);
+			System.debug('fundOppIds = ' + fundOppIds);
 			for (cb5__CBVariable1__c fund : [SELECT Id, Name FROM cb5__CBVariable1__c WHERE cb5__ExtId__c IN:fundOppIds ORDER BY Name]) {
 				fundSO.put(fund.Id, fund.Name);
 			}
+			System.debug('fundSO = ' + fundSO);
 		}
 		return r;
 	}
@@ -78,8 +81,13 @@ public with sharing class CBGMGrantPageController {
 	@AuraEnabled
 	public static void saveGrantAmountServer(cb5__CBAmount__c amount, String oppId) {
 		update amount;
+	}
+
+	@AuraEnabled
+	public static void recalculateOpportunityAmountServer(String oppId) {
 		CBGMOpportunityDomain.recalculateTotalAmounts(oppId);
 	}
+
 
 	@AuraEnabled
 	public static void saveGrantBudgetLineServer(cb5__CBBudgetLine__c budgetLine) {

@@ -29,6 +29,8 @@ import getGrantBudgetLinesServer from '@salesforce/apex/CBGMGrantPageController.
 import saveGrantAmountServer from '@salesforce/apex/CBGMGrantPageController.saveGrantAmountServer';
 import saveGrantBudgetLineServer from '@salesforce/apex/CBGMGrantPageController.saveGrantBudgetLineServer';
 import addBudgetLineServer from '@salesforce/apex/CBGMGrantPageController.addBudgetLineServer';
+import recalculateOpportunityAmountServer
+	from '@salesforce/apex/CBGMGrantPageController.recalculateOpportunityAmountServer';
 import {_applyDecStyle, _getCopy, _getSOFromObject, _message, _parseServerError} from "c/cbUtils";
 
 
@@ -54,10 +56,16 @@ export default class CBFundBudget extends LightningElement {
 
 
 	async connectedCallback() {
+		this.showTable = false;
+		this.fundSO = [];
+		this.budgetLines = [];
+		this.totalLine = {grantTotal: 0};
+		this.allYearBudgetLines = [];
 		_applyDecStyle();
 		this.showSpinner = true;
 		await this.getAnalytics();
 		await this.getGrantBudgetLines();
+		this.recalculateOpportunityAmount();
 		this.showSpinner = false;
 	};
 
@@ -80,6 +88,7 @@ export default class CBFundBudget extends LightningElement {
 				this.allYearBudgetLines = allYearBudgetLines;
 				this.prepareGrantBudgetLines();
 				this.showSpinner = false;
+				this.showTable = true;
 			})
 			.catch(e => _parseServerError('Get Grant Budget Lines Error : ', e))
 	};
@@ -100,6 +109,10 @@ export default class CBFundBudget extends LightningElement {
 		} catch (e) {
 			_message('error', 'Prepare Table Error : ' + e);
 		}
+	};
+
+	recalculateOpportunityAmount = () => {
+		recalculateOpportunityAmountServer({'oppId': this.recordId}).catch(e => _message('error', 'Recalculate Opp Amount Error: ' + e));
 	};
 
 	recalculateTotalLineAndGlobalTotal = () => {
@@ -157,6 +170,7 @@ export default class CBFundBudget extends LightningElement {
 				},
 				oppId: this.recordId
 			}).catch(e => _parseServerError('Save Amount Line Error', e));
+			this.recalculateOpportunityAmount();
 		}
 	};
 
@@ -178,6 +192,10 @@ export default class CBFundBudget extends LightningElement {
 
 	///////// FIND FUND ///////
 	findFund = (event) => {
+		if (!this.availableFundIds || this.availableFundIds.length === 0) {
+			_message('info', 'No funds available');
+			return null;
+		}
 		this.targetBudgetLineId = event.target.value;
 		this.showFindBudgetModal = true;
 	};

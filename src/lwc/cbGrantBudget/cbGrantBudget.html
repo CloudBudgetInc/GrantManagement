@@ -10,9 +10,9 @@
 		<lightning-layout>
 			<lightning-layout-item size="2">
 				<div class="slds-p-top_large">
-					<lightning-button label="Add" icon-name="utility:add"
+					<lightning-button label="Add" icon-name="utility:add" title="Add a new budget line"
 									  onclick={addBudgetLines}></lightning-button>
-					<lightning-button label="" icon-name="utility:refresh"
+					<lightning-button label="" icon-name="utility:refresh" title="Refresh Budget"
 									  onclick={connectedCallback}></lightning-button>
 				</div>
 			</lightning-layout-item>
@@ -39,89 +39,94 @@
 
 
 		<!-- TOTAL -->
-		<template lwc:if={budgetLines.length}>
-			<lightning-layout class="slds-p-bottom_medium">
-				<lightning-layout-item size="3">
-					<lightning-input value='TOTAL' label="Label" disabled></lightning-input>
-				</lightning-layout-item>
-				<lightning-layout-item size="8">
-					<lightning-layout horizontal-align="space">
-						<template for:each={totalLine.cb5__CBAmounts__r} for:item="amount">
-							<lightning-layout-item key={amount}>
-								<lightning-input type='number' value={amount.cb5__Value__c}
-												 class="dec" disabled
-												 formatter="currency"
-												 onfocusout={saveAmount}
-												 name={amount.Id} step="1.0"
-												 label={amount.label}></lightning-input>
+		<template lwc:if={showTable}>
+
+			<template lwc:if={budgetLines.length}>
+				<lightning-layout class="slds-p-bottom_medium">
+					<lightning-layout-item size="3">
+						<lightning-input value='TOTAL' label="Label" disabled></lightning-input>
+					</lightning-layout-item>
+					<lightning-layout-item size="8">
+						<lightning-layout horizontal-align="space">
+							<template for:each={totalLine.cb5__CBAmounts__r} for:item="amount">
+								<lightning-layout-item key={amount}>
+									<lightning-input type='number' value={amount.cb5__Value__c}
+													 class="dec" disabled
+													 formatter="currency"
+													 onfocusout={saveAmount}
+													 name={amount.Id} step="1.0"
+													 label={amount.label}></lightning-input>
+								</lightning-layout-item>
+							</template>
+						</lightning-layout>
+					</lightning-layout-item>
+					<lightning-layout-item size="1">
+						<lightning-input type='number' label="BY Total" value={totalLine.cb5__Value__c}
+										 formatter="currency" step="1.0"
+										 class="dec totalValue"
+										 disabled></lightning-input>
+					</lightning-layout-item>
+
+				</lightning-layout>
+			</template>
+			<!-- TOTAL -->
+
+			<template for:each={budgetLines} for:item="bl">
+				<lightning-layout key={bl.Name}>
+					<lightning-layout-item size="1">
+						<p class="slds-truncate link" data-id={bl.Id} onclick={openBudgetLine}>{bl.Name}</p>
+					</lightning-layout-item>
+					<lightning-layout-item size="2">
+						<lightning-layout>
+							<lightning-layout-item size="10">
+								<lightning-combobox
+										name="cb5__CBVariable1__c"
+										variant="label-hidden"
+										label={bl.Id}
+										value={bl.cb5__CBVariable1__c}
+										placeholder="Select Fund"
+										options={fundSO}
+										disabled={bl.cb5__Lock__c}
+										onfocusout={saveBudgetLine}
+										required
+								></lightning-combobox>
 							</lightning-layout-item>
-						</template>
-					</lightning-layout>
-				</lightning-layout-item>
-				<lightning-layout-item size="1">
-					<lightning-input type='number' label="BY Total" value={totalLine.cb5__Value__c}
-									 formatter="currency" step="1.0"
-									 class="dec totalValue"
-									 disabled></lightning-input>
-				</lightning-layout-item>
-
-			</lightning-layout>
-		</template>
-		<!-- TOTAL -->
-
-		<template for:each={budgetLines} for:item="bl">
-			<lightning-layout key={bl.Name}>
-				<lightning-layout-item size="1">
-					<p class="slds-truncate link" data-id={bl.Id} onclick={openBudgetLine}>{bl.Name}</p>
-				</lightning-layout-item>
-				<lightning-layout-item size="2">
-					<lightning-layout>
-						<lightning-layout-item size="10">
-							<lightning-combobox
-									name="cb5__CBVariable1__c"
-									variant="label-hidden"
-									label={bl.Id}
-									value={bl.cb5__CBVariable1__c}
-									placeholder="Select Fund"
-									options={fundSO}
-									disabled={bl.cb5__Lock__c}
-									onfocusout={saveBudgetLine}
-									required
-							></lightning-combobox>
-						</lightning-layout-item>
-						<lightning-layout-item size="2">
-							<lightning-button-icon icon-name="utility:record_lookup" title="Find a fund" value={bl.Id}
-												   disabled={bl.cb5__Lock__c}
-												   onclick={findFund}>
-							</lightning-button-icon>
-						</lightning-layout-item>
-					</lightning-layout>
-
-
-				</lightning-layout-item>
-				<lightning-layout-item size="8">
-					<lightning-layout horizontal-align="space">
-						<template for:each={bl.cb5__CBAmounts__r} for:item="amount">
-
-							<lightning-layout-item key={amount}>
-								<lightning-input variant="label-hidden" type='number' value={amount.cb5__Value__c}
-												 class="dec" step="1.0" disabled={bl.cb5__Lock__c}
-												 formatter="currency"
-												 onfocusout={saveBudgetLine}
-												 label={amount.Id}></lightning-input>
+							<lightning-layout-item size="2">
+								<lightning-button-icon icon-name="utility:record_lookup" title="Find a fund"
+													   value={bl.Id}
+													   disabled={bl.cb5__Lock__c}
+													   onclick={findFund}>
+								</lightning-button-icon>
 							</lightning-layout-item>
+						</lightning-layout>
 
-						</template>
-					</lightning-layout>
-				</lightning-layout-item>
-				<lightning-layout-item size="1">
-					<lightning-input type='number' variant="label-hidden" label="" value={bl.cb5__Value__c}
-									 formatter="currency" step="1.0"
-									 class="dec totalValue"
-									 disabled></lightning-input>
-				</lightning-layout-item>
 
-			</lightning-layout>
+					</lightning-layout-item>
+					<lightning-layout-item size="8">
+						<lightning-layout horizontal-align="space">
+							<template for:each={bl.cb5__CBAmounts__r} for:item="amount">
+
+								<lightning-layout-item key={amount}>
+									<lightning-input variant="label-hidden" type='number' value={amount.cb5__Value__c}
+													 class="dec" step="1.0" disabled={bl.cb5__Lock__c}
+													 formatter="currency"
+													 onfocusout={saveBudgetLine}
+													 label={amount.Id}></lightning-input>
+								</lightning-layout-item>
+
+							</template>
+						</lightning-layout>
+					</lightning-layout-item>
+					<lightning-layout-item size="1">
+						<lightning-input type='number' variant="label-hidden" label="" value={bl.cb5__Value__c}
+										 formatter="currency" step="1.0"
+										 class="dec totalValue"
+										 disabled></lightning-input>
+					</lightning-layout-item>
+
+				</lightning-layout>
+
+			</template>
 
 		</template>
 

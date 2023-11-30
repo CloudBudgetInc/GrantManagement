@@ -25,21 +25,10 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 
-public with sharing class CBGMFundBalanceBatch implements Database.Batchable<sObject> {
+global with sharing class CBGMFundBalanceProcess implements cb5.CBProcessInterface {
 
-	public Database.QueryLocator start(Database.BatchableContext BC) {
-		String query = 'SELECT Id FROM Opportunity WHERE RecordType.Name = \'Fund\'';
-		return Database.getQueryLocator(query);
+	global void runProcess(String param1, String param2) {
+		CBGMFundBalanceBatch obj = new CBGMFundBalanceBatch();
+		Id batchId = Database.executeBatch(obj, 20);
 	}
-
-	public void execute(Database.BatchableContext BC, List<Opportunity> fundOpportunities) {
-		List<String> oppIds = new List<String>();
-		for (Opportunity o : fundOpportunities) oppIds.add(o.Id);
-		CBGMFundBalanceService.recalculateListOfFundBalances(oppIds);
-	}
-
-	public void finish(Database.BatchableContext BC) {
-		//cb5.CBTaskDispatcherService.runNextTask();
-	}
-
 }

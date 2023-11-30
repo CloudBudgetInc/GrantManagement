@@ -80,6 +80,7 @@ public with sharing class CBGMFundPageController {
 
 	@AuraEnabled
 	public static void saveFundAmountServer(cb5__CBAmount__c amount) {
+		System.debug('Amount: ' + amount);
 		update amount;
 	}
 
@@ -104,8 +105,12 @@ public with sharing class CBGMFundPageController {
 	}
 
 	@AuraEnabled
-	public static void saveFundBalanceBudgetLineServer(List<cb5__CBAmount__c> amounts, String oppId, String selectedBYId) {
-		String balanceScenarioId = [SELECT Id FROM cb5__CBScenario__c WHERE Name = :CBGMConst.BALANCE_FUND_SCENARIO_NAME][0].Id;
+	public static void recalculateFundBalanceBudgetServer(String oppId) {
+		List<String> oppIds = new List<String>{
+				oppId
+		};
+		CBGMFundBalanceService.recalculateListOfFundBalances(oppIds);
+		/*String balanceScenarioId = [SELECT Id FROM cb5__CBScenario__c WHERE Name = :CBGMConst.BALANCE_FUND_SCENARIO_NAME][0].Id;
 		cb5__CBVariable1__c fund = [SELECT Id, Name FROM cb5__CBVariable1__c WHERE cb5__ExtId__c = :oppId][0];
 		Opportunity opportunity = [SELECT CBVariable3__c,CBVariable4__c,CBVariable5__c,CBDivision__c,CBAccount__c FROM Opportunity WHERE Id = :oppId];
 		String accountId = [SELECT Id FROM cb5__CBAccount__c WHERE Name = :CBGMConst.DEFAULT_FUNDING_ACCOUNT_NAME][0].Id;
@@ -129,7 +134,11 @@ public with sharing class CBGMFundPageController {
 		budgetLine.cb5__CBAccount__c = accountId;
 		upsert budgetLine;
 		for (cb5__CBAmount__c amount : amounts) amount.cb5__CBBudgetLine__c = budgetLine.Id;
-		upsert amounts;
+		upsert amounts;*/
+	}
+
+	@AuraEnabled
+	public static void recalculateTotalAmountsServer(String oppId) {
 		CBGMOpportunityDomain.recalculateTotalAmounts(oppId);
 	}
 
