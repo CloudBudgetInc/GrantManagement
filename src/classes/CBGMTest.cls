@@ -100,6 +100,8 @@ public with sharing class CBGMTest {
 		//CBGMFundBalanceBatch ba = new CBGMFundBalanceBatch();
 		//Id jobId = Database.executeBatch(ba, 5);
 
+		insert new cb5__CBInvoice__c(Name = 'test', cb5__CBVariable1__c = var1FundId);
+
 		CBGMFundBalanceProcess process = new CBGMFundBalanceProcess();
 		process.runProcess(null, null);
 

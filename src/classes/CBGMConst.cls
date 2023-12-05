@@ -27,10 +27,15 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 public with sharing class CBGMConst {
 
-	public static final String COMMITTED_FUND_SCENARIO_NAME = 'Fund Committed';
+	public static final String BASE_SCENARIO_NAME = 'Base';
 	public static final String BALANCE_FUND_SCENARIO_NAME = 'Fund Balance';
-	public static final String GRANT_PLAN_SCENARIO_NAME = 'Grant Plan';
+
 	public static final String DEFAULT_FUNDING_ACCOUNT_NAME = 'Funding';
 	public static final String DEFAULT_GRANT_ACCOUNT_NAME = 'Grant';
+
+	public static final String NEEDED_PROFILE_NAME = 'System Administrator';
+	public static final String NEEDED_PERMISSION_SET_NAME = 'CB GM Manager';
+
+	public static Boolean invoiceTriggerDone = false;
 
 }

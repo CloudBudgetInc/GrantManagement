@@ -28,7 +28,9 @@ import getAnalyticsServer from '@salesforce/apex/CBGMGrantPageController.getAnal
 import getGrantBudgetLinesServer from '@salesforce/apex/CBGMGrantPageController.getGrantBudgetLinesServer';
 import saveGrantAmountServer from '@salesforce/apex/CBGMGrantPageController.saveGrantAmountServer';
 import saveGrantBudgetLineServer from '@salesforce/apex/CBGMGrantPageController.saveGrantBudgetLineServer';
+import isManagerServer from '@salesforce/apex/CBGMGrantPageController.isManagerServer';
 import addBudgetLineServer from '@salesforce/apex/CBGMGrantPageController.addBudgetLineServer';
+import swapContractToOpportunityServer from '@salesforce/apex/CBGMGrantPageController.swapContractToOpportunityServer';
 import recalculateOpportunityAmountServer
 	from '@salesforce/apex/CBGMGrantPageController.recalculateOpportunityAmountServer';
 import {_applyDecStyle, _getCopy, _getSOFromObject, _message, _parseServerError} from "c/cbUtils";
@@ -46,6 +48,7 @@ export default class CBFundBudget extends LightningElement {
 	@track fundSO = [];
 	@track showTable = false;
 	@track budgetLineId = false;
+	@track isManager = false; // if user is GM admit he can select funds
 
 	///// FIND BUDGET //////
 	@track showFindBudgetModal = false;
@@ -63,10 +66,18 @@ export default class CBFundBudget extends LightningElement {
 		this.allYearBudgetLines = [];
 		_applyDecStyle();
 		this.showSpinner = true;
+		await this.swapContractToOpportunity();
+		await this.isUserGMManager();
 		await this.getAnalytics();
 		await this.getGrantBudgetLines();
 		this.recalculateOpportunityAmount();
 		this.showSpinner = false;
+	};
+
+	swapContractToOpportunity = async () => {
+		console.log('OLD Record Id = ' + this.recordId);
+		this.recordId = await swapContractToOpportunityServer({contractOppId: this.recordId}).catch(e => _parseServerError('Swap ID Error' + e));
+		console.log('NEW Record Id = ' + this.recordId);
 	};
 
 	getAnalytics = async () => {
@@ -91,6 +102,10 @@ export default class CBFundBudget extends LightningElement {
 				this.showTable = true;
 			})
 			.catch(e => _parseServerError('Get Grant Budget Lines Error : ', e))
+	};
+
+	isUserGMManager = async () => {
+		this.isManager = await isManagerServer();
 	};
 
 	prepareGrantBudgetLines = () => {

@@ -77,7 +77,6 @@ public with sharing class CBGMFundBalanceService {
 	 * @param oppIds fund opportunity ids
 	 */
 	public static void recalculateListOfFundBalances(List<String> oppIds) {
-		String balanceScenarioId = [SELECT Id FROM cb5__CBScenario__c WHERE Name = :CBGMConst.BALANCE_FUND_SCENARIO_NAME][0].Id;
 		List<cb5__CBVariable1__c> funds = [SELECT Id,Name FROM cb5__CBVariable1__c WHERE cb5__ExtId__c IN:new Set<String>(oppIds)];
 		Set<String> fundIds = new Set<String>();
 		for (cb5__CBVariable1__c fund : funds) fundIds.add(fund.Id);
@@ -152,7 +151,8 @@ public with sharing class CBGMFundBalanceService {
 				SELECT Id, cb5__CBVariable1__c, cb5__CBBudgetYear__c, (SELECT cb5__CBPeriod__c, cb5__Value__c FROM cb5__CBAmounts__r)
 				FROM cb5__CBBudgetLine__c
 				WHERE cb5__CBVariable1__c IN:fundIds
-				AND cb5__CBScenario__r.Name = :CBGMConst.COMMITTED_FUND_SCENARIO_NAME
+				AND cb5__CBScenario__r.Name = :CBGMConst.BASE_SCENARIO_NAME
+				AND cb5__CBSubAccountName__c = 'Fund'
 				ORDER BY cb5__CBVariable1__r.Name, cb5__CBBudgetYear__r.cb5__Start__c
 		]) {
 			BLWrapper wrapper = result.get(bl.cb5__CBVariable1__c);
@@ -173,7 +173,8 @@ public with sharing class CBGMFundBalanceService {
 				SELECT SUM(cb5__Value__c) cb5__Value__c, cb5__CBBudgetLine__r.cb5__CBVariable1__c cb5__CBVariable1__c,
 						cb5__CBBudgetLine__r.cb5__CBBudgetYear__c cb5__CBBudgetYear__c, cb5__CBPeriod__c
 				FROM cb5__CBAmount__c
-				WHERE cb5__CBBudgetLine__r.cb5__CBVariable1__c IN:fundIds AND cb5__CBBudgetLine__r.cb5__CBScenario__r.Name = :CBGMConst.GRANT_PLAN_SCENARIO_NAME
+				WHERE cb5__CBBudgetLine__r.cb5__CBVariable1__c IN:fundIds AND cb5__CBBudgetLine__r.cb5__CBScenario__r.Name = :CBGMConst.BASE_SCENARIO_NAME
+				AND cb5__CBBudgetLine__r.cb5__CBSubAccountName__c != 'Fund'
 				GROUP BY cb5__CBBudgetLine__r.cb5__CBVariable1__c, cb5__CBBudgetLine__r.cb5__CBBudgetYear__c, cb5__CBPeriod__c
 		]) {
 			String CBVariable1 = (String) ar.get('cb5__CBVariable1__c');

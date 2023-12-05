@@ -30,6 +30,7 @@ import getFundBudgetLinesServer from '@salesforce/apex/CBGMFundPageController.ge
 import generateFundBudgetLinesServer from '@salesforce/apex/CBGMFundPageController.generateFundBudgetLinesServer';
 import saveFundAmountServer from '@salesforce/apex/CBGMFundPageController.saveFundAmountServer';
 import getAllocationGrantsServer from '@salesforce/apex/CBGMFundPageController.getAllocationGrantsServer';
+import getAllocationOperationalServer from '@salesforce/apex/CBGMFundPageController.getAllocationOperationalServer';
 import updateOpportunityByTriggerServer from '@salesforce/apex/CBGMFundPageController.updateOpportunityByTriggerServer';
 import recalculateTotalAmountsServer from '@salesforce/apex/CBGMFundPageController.recalculateTotalAmountsServer';
 import recalculateFundBalanceBudgetServer
@@ -43,7 +44,9 @@ export default class CBFundBudget extends LightningElement {
 	@track showSpinner = false;
 	@track allCommittedBudgetLines = [];
 	@track allGrantBudgetLines = [];
+	@track allOperationalBudgetLines = [];
 	@track grantBudgetLines = [];
+	@track operationalBudgetLines = [];
 	@track selectedBYId;
 	@track budgetYearSO = [];
 	@track fundSO = [];
@@ -69,8 +72,10 @@ export default class CBFundBudget extends LightningElement {
 		await this.getFundBudgetLines();
 		this.generateCommittedBudgetLine();
 		await this.getAllocationGrants();
-		this.generateGrantBudgetLines();
-		this.generateBalanceAmounts();
+		await this.getAllocationOperational();
+		this.separateGrantBudgetLines();
+		this.separateOperationalBudgetLines();
+		this.calculateBalanceAmounts();
 		this.showSpinner = false;
 		this.recalculateTotalAmounts();
 	};
@@ -98,6 +103,14 @@ export default class CBFundBudget extends LightningElement {
 		await getAllocationGrantsServer({oppId: this.recordId})
 			.then(allGrantBudgetLines => this.allGrantBudgetLines = allGrantBudgetLines)
 			.catch(e => _parseServerError('Get Grant Allocation Error : ', e));
+	};
+
+	getAllocationOperational = async () => {
+		await getAllocationOperationalServer({oppId: this.recordId})
+			.then(allOperationalBudgetLines => {
+				this.allOperationalBudgetLines = allOperationalBudgetLines;
+			})
+			.catch(e => _parseServerError('Get Operational Allocation Error : ', e));
 	};
 
 	recalculateTotalAmounts = () => {
@@ -130,40 +143,86 @@ export default class CBFundBudget extends LightningElement {
 	/**
 	 * Grant allocation grouped synthetic lines
 	 */
-	generateGrantBudgetLines = () => {
+	separateGrantBudgetLines = () => {
 		try {
 			const grantBudgetLinesBY = this.allGrantBudgetLines.filter(bl => bl.cb5__CBBudgetYear__c === this.selectedBYId);
 			const BLObject = {};
+			const totalLine = {
+				Name: 'TOTAL GRANTED',
+				cb5__CBAmounts__r: [],
+				cb5__Value__c: 0,
+				styleClassText: 'totalValue',
+				styleClassNumber: 'totalValue dec'
+			};
 			grantBudgetLinesBY.forEach(bl => {
-				console.log('bl = ' + JSON.stringify(bl));
 				let groupGrantBudgetLine = BLObject[bl.cb5__CBVariable2__c];
 				if (!groupGrantBudgetLine) {
 					groupGrantBudgetLine = {
 						Name: bl.cb5__CBVariable2__r.Name,
 						cb5__CBAmounts__r: _getCopy(bl.cb5__CBAmounts__r),
-						cb5__Value__c: 0
+						cb5__Value__c: 0,
+						styleClassNumber: 'dec'
 					};
-					console.log('New groupGrantBudgetLine 1 = ' + JSON.stringify(groupGrantBudgetLine));
 					groupGrantBudgetLine.cb5__CBAmounts__r.forEach(a => a.cb5__Value__c = 0);
-					console.log('New groupGrantBudgetLine 2 = ' + JSON.stringify(groupGrantBudgetLine));
 					BLObject[bl.cb5__CBVariable2__c] = groupGrantBudgetLine;
 				}
 				bl.cb5__CBAmounts__r.forEach((amount, i) => {
+					let oldAmount = totalLine.cb5__CBAmounts__r[i];
+					if (!oldAmount) {
+						oldAmount = {cb5__Value__c: 0};
+						totalLine.cb5__CBAmounts__r[i] = oldAmount;
+					}
+					totalLine.cb5__CBAmounts__r[i].cb5__Value__c = +oldAmount.cb5__Value__c + +amount.cb5__Value__c;
+					totalLine.cb5__Value__c += +amount.cb5__Value__c;
+
 					groupGrantBudgetLine.cb5__CBAmounts__r[i].cb5__Value__c += +amount.cb5__Value__c;
 					groupGrantBudgetLine.cb5__Value__c += +amount.cb5__Value__c;
 				});
 			});
-			this.grantBudgetLines = Object.values(BLObject);
+			this.grantBudgetLines = [totalLine, ...Object.values(BLObject)];
 		} catch (e) {
 			_message('error', 'Generate Grant Budget Lines Error : ' + e);
 		}
 	};
 
-	generateBalanceAmounts = () => {
+	separateOperationalBudgetLines = () => {
+		try {
+			const operationalBudgetLinesBY = this.allOperationalBudgetLines.filter(bl => bl.cb5__CBBudgetYear__c === this.selectedBYId);
+			const totalLine = {
+				Name: 'TOTAL OPERATIONAL',
+				cb5__CBAmounts__r: [],
+				cb5__Value__c: 0,
+				styleClassText: 'totalValue',
+				styleClassNumber: 'totalValue dec'
+			};
+			operationalBudgetLinesBY.forEach(bl => {
+				bl.cb5__Value__c = 0;
+				bl.styleClassNumber = 'dec';
+				bl.cb5__CBAmounts__r.forEach((amount, i) => {
+					let oldAmount = totalLine.cb5__CBAmounts__r[i];
+					if (!oldAmount) {
+						oldAmount = {cb5__Value__c: 0};
+						totalLine.cb5__CBAmounts__r[i] = oldAmount;
+					}
+					totalLine.cb5__CBAmounts__r[i].cb5__Value__c = +oldAmount.cb5__Value__c + +amount.cb5__Value__c;
+					bl.cb5__Value__c += +amount.cb5__Value__c;
+					totalLine.cb5__Value__c += +amount.cb5__Value__c;
+				});
+			});
+			this.operationalBudgetLines = [totalLine, ...operationalBudgetLinesBY];
+			console.log(JSON.stringify(this.operationalBudgetLines));
+		} catch (e) {
+			_message('error', 'Generate Operational Budget Lines Error : ' + e);
+		}
+	};
+
+
+	calculateBalanceAmounts = () => {
 		try {
 			const allBalanceAmounts = {}; // key is periodId, value is CB amount
 			let rest = 0;
-			const allGrantedAmountsMap = this.allGrantBudgetLines.reduce((r, bl) => { // key is grant amount period id. value is amount
+			let allAllocations = [...this.allGrantBudgetLines, ...this.allOperationalBudgetLines];
+			const allAllocatedAmountsMap = allAllocations.reduce((r, bl) => { // key is grant amount period id. value is amount
 				bl.cb5__CBAmounts__r.forEach(a => {
 					let value = r[a.cb5__CBPeriod__c];
 					if (!value) value = 0;
@@ -176,7 +235,7 @@ export default class CBFundBudget extends LightningElement {
 					const balanceAmount = _getCopy(amount);
 					['cb5__CBBudgetLine__c', 'Id', 'cb5__CBPeriod__r', 'label'].forEach(field => delete balanceAmount[field]);
 					allBalanceAmounts[amount.cb5__CBPeriod__c] = balanceAmount;
-					let granted = allGrantedAmountsMap[amount.cb5__CBPeriod__c] || 0;
+					let granted = allAllocatedAmountsMap[amount.cb5__CBPeriod__c] || 0;
 					//console.log('Granted = ' + granted);
 					let balanceValue = rest + +amount.cb5__Value__c - granted;
 					//console.log('balanceValue = ' + balanceValue);
@@ -201,9 +260,9 @@ export default class CBFundBudget extends LightningElement {
 	///////////////// HANDLERS /////////////////////
 	handleFilter = async (event) => {
 		this.selectedBYId = event.target.value;
-		this.generateGrantBudgetLines();
+		this.separateGrantBudgetLines();
 		this.generateCommittedBudgetLine();
-		this.generateBalanceAmounts();
+		this.calculateBalanceAmounts();
 	};
 	/**
 	 * Handler for lost amount
@@ -223,7 +282,7 @@ export default class CBFundBudget extends LightningElement {
 		});
 		console.log('saveFundAmountServer : ' + JSON.stringify(amountNeedToBeSaved));
 		await saveFundAmountServer({amount: amountNeedToBeSaved}).catch(e => _parseServerError('Save Amount Error', e));
-		this.generateBalanceAmounts();
+		this.calculateBalanceAmounts();
 		this.recalculateTotalAmounts();
 	};
 

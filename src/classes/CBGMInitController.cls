@@ -47,8 +47,7 @@ global with sharing class CBGMInitController {
 		List<cb5__CBScenario__c> scenarios = new List<cb5__CBScenario__c>();
 		List<String> scenarioNames = new List<String>{
 				CBGMConst.BALANCE_FUND_SCENARIO_NAME,
-				CBGMConst.GRANT_PLAN_SCENARIO_NAME,
-				CBGMConst.COMMITTED_FUND_SCENARIO_NAME
+				CBGMConst.BASE_SCENARIO_NAME
 		};
 		for (String s : scenarioNames) scenarios.add(new cb5__CBScenario__c(Name = s));
 		insert scenarios;
@@ -64,15 +63,18 @@ global with sharing class CBGMInitController {
 			insert accType;
 		}
 
-		cb5__CBSubAccount__c subAccType = new cb5__CBSubAccount__c(Name = 'Grant Management');
-		insert subAccType;
+		List<cb5__CBSubAccount__c> subTypes = new List<cb5__CBSubAccount__c>();
+		cb5__CBSubAccount__c fundSubAccType = new cb5__CBSubAccount__c(Name = 'Fund');
+		cb5__CBSubAccount__c grantSubAccType = new cb5__CBSubAccount__c(Name = 'Grant');
+		subTypes.add(fundSubAccType);
+		subTypes.add(grantSubAccType);
+		insert subTypes;
 
 		List<cb5__CBAccount__c> accounts = new List<cb5__CBAccount__c>();
-		List<String> accountNames = new List<String>{
-				CBGMConst.DEFAULT_GRANT_ACCOUNT_NAME,
-				CBGMConst.DEFAULT_FUNDING_ACCOUNT_NAME
-		};
-		for (String s : accountNames) accounts.add(new cb5__CBAccount__c(Name = s, cb5__CBAccountType__c = accType.Id, cb5__CBSubAccount__c = subAccType.Id));
+		cb5__CBAccount__c fundAccount = new cb5__CBAccount__c(Name = CBGMConst.DEFAULT_FUNDING_ACCOUNT_NAME, cb5__CBAccountType__c = accType.Id, cb5__CBSubAccount__c = fundSubAccType.Id);
+		cb5__CBAccount__c grantAccount = new cb5__CBAccount__c(Name = CBGMConst.DEFAULT_GRANT_ACCOUNT_NAME, cb5__CBAccountType__c = accType.Id, cb5__CBSubAccount__c = grantSubAccType.Id);
+		accounts.add(fundAccount);
+		accounts.add(grantAccount);
 		insert accounts;
 	}
 

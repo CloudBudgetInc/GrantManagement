@@ -80,7 +80,7 @@
 							<lightning-layout-item key={amount}>
 								<lightning-input type='number' value={amount.cb5__Value__c} formatter="currency"
 												 disabled variant="label-hidden"
-												 class='dec'
+												 class='dec' step="1"
 												 name={amount.Id}
 												 label={amount.label}></lightning-input>
 								<template lwc:if={amount.overBudget}>
@@ -108,7 +108,7 @@
 			<template for:each={grantBudgetLines} for:item="bl">
 				<lightning-layout key={bl}>
 					<lightning-layout-item size="2">
-						<lightning-input value={bl.Name} label="Label" disabled
+						<lightning-input value={bl.Name} label="Label" disabled class={bl.styleClassText}
 										 variant="label-hidden"></lightning-input>
 					</lightning-layout-item>
 					<lightning-layout-item size="9">
@@ -116,7 +116,41 @@
 							<template for:each={bl.cb5__CBAmounts__r} for:item="amount">
 
 								<lightning-layout-item key={amount}>
-									<lightning-input type='number' value={amount.cb5__Value__c} class="dec"
+									<lightning-input type='number' value={amount.cb5__Value__c}
+													 class={bl.styleClassNumber}
+													 formatter="currency" variant="label-hidden" step="1"
+													 disabled></lightning-input>
+								</lightning-layout-item>
+
+							</template>
+						</lightning-layout>
+					</lightning-layout-item>
+					<lightning-layout-item size="1">
+						<lightning-input type='number' label="Total" value={bl.cb5__Value__c} formatter="currency"
+										 variant="label-hidden"
+										 class={bl.styleClassNumber}
+										 disabled></lightning-input>
+					</lightning-layout-item>
+
+				</lightning-layout>
+			</template>
+			<!-- GRANT ALLOCATION  -->
+
+			<!-- GRANT ALLOCATION  -->
+			OPERATIONAL ALLOCATION
+			<template for:each={operationalBudgetLines} for:item="bl">
+				<lightning-layout key={bl}>
+					<lightning-layout-item size="2">
+						<lightning-input value={bl.Name} label="Label" disabled class={bl.styleClassText}
+										 variant="label-hidden"></lightning-input>
+					</lightning-layout-item>
+					<lightning-layout-item size="9">
+						<lightning-layout horizontal-align="space">
+							<template for:each={bl.cb5__CBAmounts__r} for:item="amount">
+
+								<lightning-layout-item key={amount}>
+									<lightning-input type='number' value={amount.cb5__Value__c}
+													 class={bl.styleClassNumber}
 													 formatter="currency" variant="label-hidden"
 													 disabled></lightning-input>
 								</lightning-layout-item>
@@ -127,7 +161,7 @@
 					<lightning-layout-item size="1">
 						<lightning-input type='number' label="Total" value={bl.cb5__Value__c} formatter="currency"
 										 variant="label-hidden"
-										 class="dec totalValue"
+										 class={bl.styleClassNumber}
 										 disabled></lightning-input>
 					</lightning-layout-item>
 

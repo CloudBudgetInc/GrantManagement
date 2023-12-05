@@ -28,6 +28,17 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 public with sharing class CBGMGrantPageController {
 
 	@AuraEnabled
+	public static String swapContractToOpportunityServer(String contractOppId) {
+		Id someId = (Id) contractOppId;
+		Schema.SObjectType sObjectType = someId.getSObjectType();
+		String sObjectName = sObjectType.getDescribe().getName();
+		if (sObjectName == 'Contract') {
+			return [SELECT Opportunity__c FROM Contract WHERE Id = :contractOppId].Opportunity__c;
+		}
+		return contractOppId;
+	}
+
+	@AuraEnabled
 	public static Map<String, Map<String, String>> getAnalyticsServer(String oppId) {
 		Map<String, Map<String, String>> r = new Map<String, Map<String, String>>();
 
@@ -41,17 +52,14 @@ public with sharing class CBGMGrantPageController {
 		String destination = [SELECT Destination__c FROM Opportunity WHERE Id = :oppId][0].Destination__c;
 		Map<String, String> fundSO = new Map<String, String>();
 		r.put('fundSO', fundSO);
-		System.debug('destination = ' + destination);
 
 		if (!String.isEmpty(destination)) {
 			List<String> destSet = new List<String>(destination.split(';'));
 			Set<String> fundOppIds = new Set<String>();
 			for (Opportunity fund : [SELECT Id FROM Opportunity WHERE RecordType.Name = 'Fund' AND Destination__c INCLUDES (:destination)]) fundOppIds.add(fund.Id);
-			System.debug('fundOppIds = ' + fundOppIds);
 			for (cb5__CBVariable1__c fund : [SELECT Id, Name FROM cb5__CBVariable1__c WHERE cb5__ExtId__c IN:fundOppIds ORDER BY Name]) {
 				fundSO.put(fund.Id, fund.Name);
 			}
-			System.debug('fundSO = ' + fundSO);
 		}
 		return r;
 	}
@@ -72,7 +80,7 @@ public with sharing class CBGMGrantPageController {
 						ORDER BY cb5__CBPeriod__r.cb5__Start__c
 				)
 				FROM cb5__CBBudgetLine__c
-				WHERE cb5__CBScenario__r.Name = :CBGMConst.GRANT_PLAN_SCENARIO_NAME
+				WHERE cb5__CBScenario__r.Name = :CBGMConst.BASE_SCENARIO_NAME
 				AND cb5__CBVariable2__r.cb5__ExtId__c = :oppId
 				ORDER BY cb5__CBBudgetYear__r.Name, CreatedDate
 		];
@@ -108,7 +116,7 @@ public with sharing class CBGMGrantPageController {
 	public static void addBudgetLineServer(String oppId, String selectedBYId) {
 		String grantId = [SELECT Id FROM cb5__CBVariable2__c WHERE cb5__ExtId__c = :oppId][0].Id;
 		String accId = [SELECT Id FROM cb5__CBAccount__c WHERE Name = :CBGMConst.DEFAULT_GRANT_ACCOUNT_NAME][0].Id;
-		String scenarioId = [SELECT Id FROM cb5__CBScenario__c WHERE Name = :CBGMConst.GRANT_PLAN_SCENARIO_NAME][0].Id;
+		String scenarioId = [SELECT Id FROM cb5__CBScenario__c WHERE Name = :CBGMConst.BASE_SCENARIO_NAME][0].Id;
 
 		cb5__CBBudgetLine__c budgetLine = new cb5__CBBudgetLine__c(Name = 'New', cb5__CBVariable2__c = grantId, cb5__CBAccount__c = accId,
 				cb5__CBBudgetYear__c = selectedBYId, cb5__CBScenario__c = scenarioId);
@@ -119,6 +127,16 @@ public with sharing class CBGMGrantPageController {
 			amounts.add(new cb5__CBAmount__c(cb5__CBBudgetLine__c = budgetLine.Id, cb5__CBPeriod__c = period.Id, cb5__Value__c = 0));
 		}
 		insert amounts;
+	}
+
+	@AuraEnabled
+	public static Boolean isManagerServer() {
+		User user = [SELECT Profile.Name FROM User WHERE Id = :UserInfo.getUserId() LIMIT 1][0];
+		if (user.Profile.Name.equals(CBGMConst.NEEDED_PROFILE_NAME)) return true;
+		for (PermissionSetAssignment psa : [SELECT PermissionSet.Name FROM PermissionSetAssignment WHERE AssigneeId = :user.Id]) {
+			if (psa.PermissionSet.Name.equals(CBGMConst.NEEDED_PERMISSION_SET_NAME)) return true;
+		}
+		return false;
 	}
 
 }

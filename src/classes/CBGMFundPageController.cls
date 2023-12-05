@@ -47,8 +47,9 @@ public with sharing class CBGMFundPageController {
 						ORDER BY cb5__CBPeriod__r.cb5__Start__c
 				)
 				FROM cb5__CBBudgetLine__c
-				WHERE cb5__CBScenario__r.Name = :CBGMConst.COMMITTED_FUND_SCENARIO_NAME
+				WHERE cb5__CBScenario__r.Name = :CBGMConst.BASE_SCENARIO_NAME
 				AND cb5__CBVariable1__r.cb5__ExtId__c = :oppId
+				AND cb5__CBSubAccountName__c = 'Fund'
 				ORDER BY cb5__CBBudgetYear__r.Name
 		];
 	}
@@ -62,7 +63,7 @@ public with sharing class CBGMFundPageController {
 	public static void generateFundBudgetLinesServer(String oppId) {
 		Opportunity opp = [SELECT Id, Name FROM Opportunity WHERE Id = :oppId];
 		String var1Id = [SELECT Id FROM cb5__CBVariable1__c WHERE cb5__ExtId__c = :oppId][0].Id;
-		String scenarioId = [SELECT Id FROM cb5__CBScenario__c WHERE Name = :CBGMConst.COMMITTED_FUND_SCENARIO_NAME][0].Id;
+		String scenarioId = [SELECT Id FROM cb5__CBScenario__c WHERE Name = :CBGMConst.BASE_SCENARIO_NAME][0].Id;
 		String accountId = [SELECT Id FROM cb5__CBAccount__c WHERE Name = :CBGMConst.DEFAULT_FUNDING_ACCOUNT_NAME][0].Id;
 		List<cb5__CBBudgetLine__c> budgetLines = new List<cb5__CBBudgetLine__c>();
 
@@ -80,7 +81,6 @@ public with sharing class CBGMFundPageController {
 
 	@AuraEnabled
 	public static void saveFundAmountServer(cb5__CBAmount__c amount) {
-		System.debug('Amount: ' + amount);
 		update amount;
 	}
 
@@ -98,7 +98,26 @@ public with sharing class CBGMFundPageController {
 						ORDER BY cb5__CBPeriod__r.cb5__Start__c
 				)
 				FROM cb5__CBBudgetLine__c
-				WHERE cb5__CBScenario__r.Name = :CBGMConst.GRANT_PLAN_SCENARIO_NAME
+				WHERE cb5__CBScenario__r.Name = :CBGMConst.BASE_SCENARIO_NAME
+				AND cb5__CBSubAccountName__c != 'Fund'
+				AND cb5__CBVariable2__c != null
+				AND cb5__CBVariable1__r.cb5__ExtId__c = :oppId
+				ORDER BY cb5__CBBudgetYear__r.Name
+		];
+	}
+
+	@AuraEnabled
+	public static List<cb5__CBBudgetLine__c> getAllocationOperationalServer(String oppId) {
+		return [
+				SELECT Id, Name, cb5__CBVariable1__c, cb5__CBVariable2__c, cb5__CBVariable2__r.Name, cb5__CBBudgetYear__r.Name, cb5__CBBudgetYear__c, cb5__Value__c, (
+						SELECT Id, cb5__Value__c, cb5__CBPeriod__c, cb5__CBPeriod__r.cb5__CBBudgetYear__r.Name, cb5__CBPeriod__r.Name
+						FROM cb5__CBAmounts__r
+						ORDER BY cb5__CBPeriod__r.cb5__Start__c
+				)
+				FROM cb5__CBBudgetLine__c
+				WHERE cb5__CBScenario__r.Name = :CBGMConst.BASE_SCENARIO_NAME
+				AND cb5__CBSubAccountName__c != 'Fund'
+				AND cb5__CBVariable2__c = null
 				AND cb5__CBVariable1__r.cb5__ExtId__c = :oppId
 				ORDER BY cb5__CBBudgetYear__r.Name
 		];
@@ -110,31 +129,6 @@ public with sharing class CBGMFundPageController {
 				oppId
 		};
 		CBGMFundBalanceService.recalculateListOfFundBalances(oppIds);
-		/*String balanceScenarioId = [SELECT Id FROM cb5__CBScenario__c WHERE Name = :CBGMConst.BALANCE_FUND_SCENARIO_NAME][0].Id;
-		cb5__CBVariable1__c fund = [SELECT Id, Name FROM cb5__CBVariable1__c WHERE cb5__ExtId__c = :oppId][0];
-		Opportunity opportunity = [SELECT CBVariable3__c,CBVariable4__c,CBVariable5__c,CBDivision__c,CBAccount__c FROM Opportunity WHERE Id = :oppId];
-		String accountId = [SELECT Id FROM cb5__CBAccount__c WHERE Name = :CBGMConst.DEFAULT_FUNDING_ACCOUNT_NAME][0].Id;
-		delete [
-				SELECT Id
-				FROM cb5__CBBudgetLine__c
-				WHERE cb5__CBBudgetYear__c = :selectedBYId
-				AND cb5__CBVariable1__c = :fund.Id
-				AND cb5__CBScenario__c = :balanceScenarioId
-		];
-		cb5__CBBudgetLine__c budgetLine = new cb5__CBBudgetLine__c();
-		budgetLine.cb5__CBScenario__c = balanceScenarioId;
-		budgetLine.cb5__CBVariable1__c = fund.Id;
-		if (opportunity.CBVariable3__c != null) budgetLine.cb5__CBVariable3__c = opportunity.CBVariable3__c;
-		if (opportunity.CBVariable4__c != null) budgetLine.cb5__CBVariable4__c = opportunity.CBVariable4__c;
-		if (opportunity.CBVariable5__c != null) budgetLine.cb5__CBVariable5__c = opportunity.CBVariable5__c;
-		if (opportunity.CBDivision__c != null) budgetLine.cb5__CBDivision__c = opportunity.CBDivision__c;
-		if (opportunity.CBAccount__c != null) budgetLine.cb5__CBAccount__c = opportunity.CBAccount__c;
-		budgetLine.Name = fund.Name;
-		budgetLine.cb5__CBBudgetYear__c = selectedBYId;
-		budgetLine.cb5__CBAccount__c = accountId;
-		upsert budgetLine;
-		for (cb5__CBAmount__c amount : amounts) amount.cb5__CBBudgetLine__c = budgetLine.Id;
-		upsert amounts;*/
 	}
 
 	@AuraEnabled
@@ -158,7 +152,7 @@ public with sharing class CBGMFundPageController {
 				SELECT Id,Name,cb5__CBVariable1__c, (SELECT cb5__CBPeriod__c, cb5__Value__c FROM cb5__CBAmounts__r ORDER BY cb5__CBPeriod__r.cb5__Start__c)
 				FROM cb5__CBBudgetLine__c
 				WHERE cb5__CBVariable1__c IN:new Set<String>(availableFundIds) AND cb5__CBBudgetYear__c = :grantBudgetLine.cb5__CBBudgetYear__c
-				AND cb5__CBScenario__r.Name = :CBGMConst.BALANCE_FUND_SCENARIO_NAME
+				AND cb5__CBScenario__r.Name = :CBGMConst.BASE_SCENARIO_NAME AND cb5__CBSubAccountName__c = 'Fund'
 				ORDER BY Name
 		]);
 		return r;

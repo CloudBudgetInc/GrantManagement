@@ -73,35 +73,45 @@
 
 			<template for:each={budgetLines} for:item="bl">
 				<lightning-layout key={bl.Name}>
-					<lightning-layout-item size="1">
-						<p class="slds-truncate link" data-id={bl.Id} onclick={openBudgetLine}>{bl.Name}</p>
-					</lightning-layout-item>
-					<lightning-layout-item size="2">
-						<lightning-layout>
-							<lightning-layout-item size="10">
-								<lightning-combobox
-										name="cb5__CBVariable1__c"
-										variant="label-hidden"
-										label={bl.Id}
-										value={bl.cb5__CBVariable1__c}
-										placeholder="Select Fund"
-										options={fundSO}
-										disabled={bl.cb5__Lock__c}
-										onfocusout={saveBudgetLine}
-										required
-								></lightning-combobox>
-							</lightning-layout-item>
-							<lightning-layout-item size="2">
-								<lightning-button-icon icon-name="utility:record_lookup" title="Find a fund"
-													   value={bl.Id}
-													   disabled={bl.cb5__Lock__c}
-													   onclick={findFund}>
-								</lightning-button-icon>
-							</lightning-layout-item>
-						</lightning-layout>
+
+					<template lwc:if={isManager}>
+						<lightning-layout-item size="1">
+							<p class="slds-truncate link" data-id={bl.Id} onclick={openBudgetLine}>{bl.Name}</p>
+						</lightning-layout-item>
+						<lightning-layout-item size="2">
+							<lightning-layout>
+								<lightning-layout-item size="10">
+									<lightning-combobox
+											name="cb5__CBVariable1__c"
+											variant="label-hidden"
+											label={bl.Id}
+											value={bl.cb5__CBVariable1__c}
+											placeholder="Select Fund"
+											options={fundSO}
+											disabled={bl.cb5__Lock__c}
+											onfocusout={saveBudgetLine}
+											required
+									></lightning-combobox>
+								</lightning-layout-item>
+								<lightning-layout-item size="2">
+									<lightning-button-icon icon-name="utility:record_lookup" title="Find a fund"
+														   value={bl.Id}
+														   disabled={bl.cb5__Lock__c}
+														   onclick={findFund}>
+									</lightning-button-icon>
+								</lightning-layout-item>
+							</lightning-layout>
 
 
-					</lightning-layout-item>
+						</lightning-layout-item>
+					</template>
+					<template lwc:else>
+						<lightning-layout-item size="3">
+							<p class="slds-truncate link" data-id={bl.Id} onclick={openBudgetLine}>{bl.Name}</p>
+						</lightning-layout-item>
+					</template>
+
+
 					<lightning-layout-item size="8">
 						<lightning-layout horizontal-align="space">
 							<template for:each={bl.cb5__CBAmounts__r} for:item="amount">
