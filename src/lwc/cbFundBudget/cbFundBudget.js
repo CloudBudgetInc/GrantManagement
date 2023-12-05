@@ -80,6 +80,14 @@ export default class CBFundBudget extends LightningElement {
 		this.recalculateTotalAmounts();
 	};
 
+	get renderGrantAllocationTable() {
+		return this.grantBudgetLines && this.grantBudgetLines.length > 0;
+	}
+
+	get renderOperationalAllocationTable() {
+		return this.operationalBudgetLines && this.operationalBudgetLines.length > 0;
+	}
+
 	updateOpportunityByTrigger = async () => {
 		await updateOpportunityByTriggerServer({oppId: this.recordId}).catch(e => _parseServerError('Update Opportunity by Trigger Error : ', e));
 	};
@@ -146,6 +154,7 @@ export default class CBFundBudget extends LightningElement {
 	separateGrantBudgetLines = () => {
 		try {
 			const grantBudgetLinesBY = this.allGrantBudgetLines.filter(bl => bl.cb5__CBBudgetYear__c === this.selectedBYId);
+			if (grantBudgetLinesBY.length === 0) return null;
 			const BLObject = {};
 			const totalLine = {
 				Name: 'TOTAL GRANTED',
@@ -188,6 +197,7 @@ export default class CBFundBudget extends LightningElement {
 	separateOperationalBudgetLines = () => {
 		try {
 			const operationalBudgetLinesBY = this.allOperationalBudgetLines.filter(bl => bl.cb5__CBBudgetYear__c === this.selectedBYId);
+			if (operationalBudgetLinesBY.length === 0) return null;
 			const totalLine = {
 				Name: 'TOTAL OPERATIONAL',
 				cb5__CBAmounts__r: [],
