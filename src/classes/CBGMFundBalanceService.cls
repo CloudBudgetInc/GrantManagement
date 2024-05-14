@@ -152,7 +152,7 @@ public with sharing class CBGMFundBalanceService {
 				FROM cb5__CBBudgetLine__c
 				WHERE cb5__CBVariable1__c IN:fundIds
 				AND cb5__CBScenario__r.Name = :CBGMConst.BASE_SCENARIO_NAME
-				AND cb5__CBSubAccountName__c = 'Fund'
+				AND cb5gm__AccountApplicableFor__c = 'Fund'
 				ORDER BY cb5__CBVariable1__r.Name, cb5__CBBudgetYear__r.cb5__Start__c
 		]) {
 			BLWrapper wrapper = result.get(bl.cb5__CBVariable1__c);
@@ -174,7 +174,7 @@ public with sharing class CBGMFundBalanceService {
 						cb5__CBBudgetLine__r.cb5__CBBudgetYear__c cb5__CBBudgetYear__c, cb5__CBPeriod__c
 				FROM cb5__CBAmount__c
 				WHERE cb5__CBBudgetLine__r.cb5__CBVariable1__c IN:fundIds AND cb5__CBBudgetLine__r.cb5__CBScenario__r.Name = :CBGMConst.BASE_SCENARIO_NAME
-				AND cb5__CBBudgetLine__r.cb5__CBSubAccountName__c != 'Fund'
+				AND cb5__CBBudgetLine__r.cb5gm__AccountApplicableFor__c != 'Fund'
 				GROUP BY cb5__CBBudgetLine__r.cb5__CBVariable1__c, cb5__CBBudgetLine__r.cb5__CBBudgetYear__c, cb5__CBPeriod__c
 		]) {
 			String CBVariable1 = (String) ar.get('cb5__CBVariable1__c');

@@ -8,10 +8,15 @@
         <target>lightning__RecordAction</target>
         <target>lightning__RecordPage</target>
         <target>lightning__FlowScreen</target>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
     </targets>
     <targetConfigs>
         <targetConfig targets="lightning__RecordAction">
             <actionType>ScreenAction</actionType>
+        </targetConfig>
+        <targetConfig targets="lightningCommunity__Default">
+            <property name="recordId" type="String" label="Record ID" description="Should be set to {!recordId}" default="{!recordId}"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

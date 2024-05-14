@@ -26,6 +26,17 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 public with sharing class CBGMOpportunityDomain {
+	/**
+	 * check if User is Not Admin
+	 */
+	@AuraEnabled
+	public static Boolean checkIfUserNotStandard() {
+		String userProfileName = userinfo.getUserType();
+		if (userProfileName != 'Standard') {
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Method recalculates total amount for Opportunity based on lines
@@ -33,30 +44,37 @@ public with sharing class CBGMOpportunityDomain {
 	 * @param oppId
 	 */
 	public static void recalculateTotalAmounts(String oppId) {
-
+		if (CBGMOpportunityDomain.checkIfUserNotStandard()) {
+			return;
+		}
 		Opportunity opportunity = [SELECT Id, RecordType.Name FROM Opportunity WHERE Id = :oppId];
 
 		if (opportunity.RecordType.Name == 'Fund') {
 			List<cb5__CBVariable1__c> vars1 = [SELECT Id FROM cb5__CBVariable1__c WHERE cb5__ExtId__c = :oppId];
-			if (vars1.size() == 0) return ;
-			cb5__CBVariable1__c var1 = vars1[0];
-			List<AggregateResult> committed = [
-					SELECT SUM(cb5__Value__c) cb5__Value__c
-					FROM cb5__CBAmount__c
-					WHERE cb5__CBBudgetLine__r.cb5__CBScenario__r.Name = :CBGMConst.BASE_SCENARIO_NAME
-					AND cb5__CBBudgetLine__r.cb5__CBSubAccountName__c = 'Fund'
-					AND cb5__CBBudgetLine__r.cb5__CBVariable1__c = :var1.Id
-			];
-			List<AggregateResult> granted = [
-					SELECT SUM(cb5__Value__c) cb5__Value__c
-					FROM cb5__CBAmount__c
-					WHERE cb5__CBBudgetLine__r.cb5__CBScenario__r.Name = :CBGMConst.BASE_SCENARIO_NAME
-					AND cb5__CBBudgetLine__r.cb5__CBSubAccountName__c != 'Fund'
-					AND cb5__CBBudgetLine__r.cb5__CBVariable1__c = :var1.Id
-			];
-			opportunity.AmountCommitted__c = opportunity.AmountAppliedFor__c = 0;
-			opportunity.AmountCommitted__c = committed.size() > 0 ? (Decimal) committed[0].get('cb5__Value__c') : 0;
-			opportunity.AmountAppliedFor__c = granted.size() > 0 ? (Decimal) granted[0].get('cb5__Value__c') : 0;
+			if (vars1.size() == 0) {
+				opportunity.AmountCommitted__c = 0;
+				opportunity.AmountCommitted__c = 0;
+				opportunity.AmountAppliedFor__c = 0;
+			} else {
+				cb5__CBVariable1__c var1 = vars1[0];
+				List<AggregateResult> committed = [
+						SELECT SUM(cb5__Value__c) cb5__Value__c
+						FROM cb5__CBAmount__c
+						WHERE cb5__CBBudgetLine__r.cb5__CBScenario__r.Name = :CBGMConst.BASE_SCENARIO_NAME
+						AND cb5__CBBudgetLine__r.cb5gm__AccountApplicableFor__c = 'Fund'
+						AND cb5__CBBudgetLine__r.cb5__CBVariable1__c = :var1.Id
+				];
+				List<AggregateResult> granted = [
+						SELECT SUM(cb5__Value__c) cb5__Value__c
+						FROM cb5__CBAmount__c
+						WHERE cb5__CBBudgetLine__r.cb5__CBScenario__r.Name = :CBGMConst.BASE_SCENARIO_NAME
+						AND cb5__CBBudgetLine__r.cb5gm__AccountApplicableFor__c != 'Fund' // grant and operational
+						AND cb5__CBBudgetLine__r.cb5__CBVariable1__c = :var1.Id
+				];
+				opportunity.AmountCommitted__c = opportunity.AmountAppliedFor__c = 0;
+				opportunity.AmountCommitted__c = committed.size() > 0 ? (Decimal) committed[0].get('cb5__Value__c') : 0;
+				opportunity.AmountAppliedFor__c = granted.size() > 0 ? (Decimal) granted[0].get('cb5__Value__c') : 0;
+			}
 		}
 
 		if (opportunity.RecordType.Name == 'Grant') {
@@ -69,7 +87,7 @@ public with sharing class CBGMOpportunityDomain {
 						SELECT SUM(cb5__Value__c) cb5__Value__c
 						FROM cb5__CBAmount__c
 						WHERE cb5__CBBudgetLine__r.cb5__CBScenario__r.Name = :CBGMConst.BASE_SCENARIO_NAME
-						AND cb5__CBBudgetLine__r.cb5__CBSubAccountName__c != 'Fund'
+						AND cb5__CBBudgetLine__r.cb5gm__AccountApplicableFor__c != 'Fund'
 						AND cb5__CBBudgetLine__r.cb5__CBVariable2__c = :var2.Id
 				];
 				if (ags.size() > 0) {
@@ -79,12 +97,23 @@ public with sharing class CBGMOpportunityDomain {
 		}
 
 		/// ACTUAL
-		List<AggregateResult> ags = [
-				SELECT SUM(cb5__Amount__c) cb5__Value__c
-				FROM cb5__CBInvoiceLine__c
-				WHERE cb5__CBInvoice__r.cb5__CBVariable1__r.cb5__ExtId__c = :oppId
-				OR cb5__CBInvoice__r.cb5__CBVariable2__r.cb5__ExtId__c = :oppId
-		];
+		System.debug('ACTUAL PART FOR : ' + opportunity.RecordType.Name);
+		List<AggregateResult> ags;
+		if (opportunity.RecordType.Name == 'Fund') {
+			ags = [
+					SELECT SUM(cb5__Amount__c) cb5__Value__c
+					FROM cb5__CBInvoiceLine__c
+					WHERE cb5__CBInvoice__r.cb5__CBVariable1__r.cb5__ExtId__c = :oppId AND cb5__CBInvoice__r.cb5__CBAccount__r.cb5__CBSubAccount__r.Name = 'Fund'
+			];
+			System.debug('AGR : ' + ags);
+		}
+		if (opportunity.RecordType.Name == 'Grant') {
+			ags = [
+					SELECT SUM(cb5__Amount__c) cb5__Value__c
+					FROM cb5__CBInvoiceLine__c
+					WHERE cb5__CBInvoice__r.cb5__CBVariable2__r.cb5__ExtId__c = :oppId
+			];
+		}
 		if (ags.size() > 0) {
 			opportunity.AmountPaid__c = (Decimal) ags[0].get('cb5__Value__c');
 		} else {
@@ -94,13 +123,17 @@ public with sharing class CBGMOpportunityDomain {
 	}
 
 	private static Map<Id, Opportunity> oppMap;
+	public static Boolean ignoreOpportunities;
 	public static void populateOpportunityMap(Set<Id> oppIds) {
 		oppMap = new Map<Id, Opportunity>();
 		for (Opportunity opp : [
 				SELECT Id,Name,RecordType.Name,CBAccount__c,CBDivision__c,CBVariable3__c,CBVariable4__c,CBVariable5__c,StageName
 				FROM Opportunity
-				WHERE Id = :oppIds
-		]) oppMap.put(opp.Id, opp);
+				WHERE (RecordType.Name = 'Fund' OR RecordType.Name = 'Grant' ) AND Id = :oppIds
+		]) {
+			oppMap.put(opp.Id, opp);
+		}
+		ignoreOpportunities = oppMap.size() == 0;
 	}
 
 	/**
@@ -149,14 +182,14 @@ public with sharing class CBGMOpportunityDomain {
 					SELECT Id,cb5__Lock__c
 					FROM cb5__CBBudgetLine__c
 					WHERE cb5__CBVariable1__r.cb5__ExtId__c = :oppId
-					AND ((cb5__CBScenario__r.Name = :CBGMConst.BASE_SCENARIO_NAME AND cb5__CBSubAccountName__c = 'Fund') OR cb5__CBScenario__r.Name = :CBGMConst.BALANCE_FUND_SCENARIO_NAME)
+					AND ((cb5__CBScenario__r.Name = :CBGMConst.BASE_SCENARIO_NAME AND cb5gm__AccountApplicableFor__c = 'Fund') OR cb5__CBScenario__r.Name = :CBGMConst.BALANCE_FUND_SCENARIO_NAME)
 			];
 		}
 		if (opportunity.RecordType.Name == 'Grant') {
 			budgetLines = [
 					SELECT Id,cb5__Lock__c
 					FROM cb5__CBBudgetLine__c
-					WHERE cb5__CBVariable2__r.cb5__ExtId__c = :oppId AND cb5__CBScenario__r.Name = :CBGMConst.BASE_SCENARIO_NAME AND cb5__CBSubAccountName__c != 'Fund'
+					WHERE cb5__CBVariable2__r.cb5__ExtId__c = :oppId AND cb5__CBScenario__r.Name = :CBGMConst.BASE_SCENARIO_NAME AND cb5gm__AccountApplicableFor__c != 'Fund'
 			];
 		}
 		if (budgetLines == null || budgetLines.size() == 0) return;
@@ -167,7 +200,7 @@ public with sharing class CBGMOpportunityDomain {
 				lockedLines.add(bl);
 			}
 		}
-		update lockedLines;
+		//update lockedLines;
 		for (cb5__CBBudgetLine__c bl : budgetLines) {
 			bl.cb5__Status__c = opportunity.StageName;
 			if (opportunity.CBAccount__c != null) bl.cb5__CBAccount__c = opportunity.CBAccount__c;
@@ -182,12 +215,12 @@ public with sharing class CBGMOpportunityDomain {
 	}
 
 	public static void updateContractValues(Id oppId) {
-		List<Contract> contracts = [SELECT Amount__c,StartDate FROM Contract WHERE Opportunity__c = :oppId];
+		List<Contract> contracts = [SELECT Amount__c,StartDate FROM Contract WHERE Opportunity__c = :oppId AND RecordType.Name = 'TDO'];
 		if (contracts.size() == 0) return ; // it means that users do not use Contracts as a source
 		List<cb5__CBAmount__c> amounts = [
 				SELECT Id,cb5__CBPeriod__c
 				FROM cb5__CBAmount__c
-				WHERE cb5__CBBudgetLine__r.cb5__CBVariable1__r.cb5__ExtId__c = :oppId AND cb5__CBBudgetLine__r.cb5__CBScenario__r.Name = :CBGMConst.BASE_SCENARIO_NAME AND cb5__CBBudgetLine__r.cb5__CBSubAccountName__c = 'Fund'
+				WHERE cb5__CBBudgetLine__r.cb5__CBVariable1__r.cb5__ExtId__c = :oppId AND cb5__CBBudgetLine__r.cb5__CBScenario__r.Name = :CBGMConst.BASE_SCENARIO_NAME AND cb5__CBBudgetLine__r.cb5gm__AccountApplicableFor__c = 'Fund'
 		];
 		if (amounts.size() == 0) return ;
 
@@ -219,6 +252,18 @@ public with sharing class CBGMOpportunityDomain {
 		CBGMWarningsService.updateWarnings(new List<String>{
 				oppId
 		});
+	}
+
+	public static void deleteAllRelatedToOpportunityData(Set<Id> oppIdSet) {
+		delete [SELECT Id FROM Contract WHERE cb5gm__Opportunity__c IN:oppIdSet];
+		delete [SELECT Id FROM cb5__CBInvoice__c WHERE cb5gm__Opportunity__c IN:oppIdSet];
+		delete [SELECT Id FROM cb5__CBBudgetLine__c WHERE cb5__CBVariable1__r.cb5__ExtId__c IN:oppIdSet OR cb5__CBVariable2__r.cb5__ExtId__c IN:oppIdSet];
+		List<cb5__CBVariable1__c> var1s = [SELECT Name FROM cb5__CBVariable1__c WHERE cb5__ExtId__c IN:oppIdSet];
+		List<cb5__CBVariable2__c> var2s = [SELECT Name FROM cb5__CBVariable2__c WHERE cb5__ExtId__c IN:oppIdSet];
+		for (cb5__CBVariable1__c v1 : var1s) v1.Name = 'DELETED ' + v1.Name.left(50);
+		for (cb5__CBVariable2__c v2 : var2s) v2.Name = 'DELETED ' + v2.Name.left(50);
+		update var1s;
+		update var2s;
 	}
 
 }

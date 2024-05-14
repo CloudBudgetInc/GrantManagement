@@ -73,7 +73,7 @@ public with sharing class CBGMWarningsService {
 	private static void populateShortfallOpportunityWarnings(String oppId) {
 		String logMessage = oppBalanceShortfallMap.get(oppId);
 		if (logMessage == null) return ;
-		logsToInsert.add(new cb5__CBLog__c(cb5__Type__c = 'Warning', Opportunity__c = oppId, cb5__Description__c = logMessage));
+		logsToInsert.add(new cb5__CBLog__c(Name = 'Overbudget', cb5__Type__c = 'Warning', Opportunity__c = oppId, cb5__Description__c = logMessage));
 	}
 
 }

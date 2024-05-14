@@ -84,6 +84,7 @@ public with sharing class CBGMTest {
 
 		String var1FundId = [SELECT Id FROM cb5__CBVariable1__c][0].Id;
 		CBGMGrantPageController.addBudgetLineServer(grant.Id, budgetYear.Id);
+		CBGMGrantPageController.getAnalyticsServer(grant.Id);
 		List<cb5__CBBudgetLine__c> grantBudgetLines = CBGMGrantPageController.getGrantBudgetLinesServer(grant.Id);
 		grantBudgetLines[0].cb5__CBVariable1__c = var1FundId;
 		update grantBudgetLines;
@@ -93,6 +94,11 @@ public with sharing class CBGMTest {
 		CBGMFundPageController.updateOpportunityByTriggerServer(fund.Id);
 		CBGMFundPageController.getAllocationGrantsServer(fund.Id);
 		CBGMFundPageController.recalculateFundBalanceBudgetServer(fund.Id);
+
+		CBGMOpportunityDomain.recalculateTotalAmounts(fund.Id);
+		CBGMOpportunityDomain.recalculateTotalAmounts(grant.Id);
+
+		CBGMGrantPageController.isManagerServer();
 
 		CBGMLockBudgetAction.cg();
 		CBGMUnlockBudgetAction.cg();

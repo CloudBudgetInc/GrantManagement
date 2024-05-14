@@ -33,12 +33,14 @@ import getAllocationGrantsServer from '@salesforce/apex/CBGMFundPageController.g
 import getAllocationOperationalServer from '@salesforce/apex/CBGMFundPageController.getAllocationOperationalServer';
 import updateOpportunityByTriggerServer from '@salesforce/apex/CBGMFundPageController.updateOpportunityByTriggerServer';
 import recalculateTotalAmountsServer from '@salesforce/apex/CBGMFundPageController.recalculateTotalAmountsServer';
+import getCBFundIdFromOppFundIdServer from '@salesforce/apex/CBGMFundPageController.getCBFundIdFromOppFundIdServer';
 import recalculateFundBalanceBudgetServer
 	from '@salesforce/apex/CBGMFundPageController.recalculateFundBalanceBudgetServer';
 import {_applyDecStyle, _getCopy, _getSOFromObject, _message, _parseServerError} from "c/cbUtils";
+import {NavigationMixin} from 'lightning/navigation';
 
 
-export default class CBFundBudget extends LightningElement {
+export default class CBFundBudget extends NavigationMixin(LightningElement) {
 
 	@api recordId;
 	@track showSpinner = false;
@@ -57,7 +59,7 @@ export default class CBFundBudget extends LightningElement {
 		total: 0
 	};
 	@track fundBalanceLine = {
-		Name: 'Fund Balance',
+		Name: 'Remaining Fund Balance',
 		cb5__CBAmounts__r: [],
 		total: 0
 	};
@@ -153,11 +155,12 @@ export default class CBFundBudget extends LightningElement {
 	 */
 	separateGrantBudgetLines = () => {
 		try {
+			this.grantBudgetLines = [];
 			const grantBudgetLinesBY = this.allGrantBudgetLines.filter(bl => bl.cb5__CBBudgetYear__c === this.selectedBYId);
 			if (grantBudgetLinesBY.length === 0) return null;
 			const BLObject = {};
 			const totalLine = {
-				Name: 'TOTAL GRANTED',
+				Name: 'TOTAL ALLOCATED',
 				cb5__CBAmounts__r: [],
 				cb5__Value__c: 0,
 				styleClassText: 'totalValue',
@@ -170,7 +173,8 @@ export default class CBFundBudget extends LightningElement {
 						Name: bl.cb5__CBVariable2__r.Name,
 						cb5__CBAmounts__r: _getCopy(bl.cb5__CBAmounts__r),
 						cb5__Value__c: 0,
-						styleClassNumber: 'dec'
+						styleClassNumber: 'dec',
+						id: bl?.cb5__CBVariable2__r?.cb5__ExtId__c
 					};
 					groupGrantBudgetLine.cb5__CBAmounts__r.forEach(a => a.cb5__Value__c = 0);
 					BLObject[bl.cb5__CBVariable2__c] = groupGrantBudgetLine;
@@ -196,6 +200,7 @@ export default class CBFundBudget extends LightningElement {
 
 	separateOperationalBudgetLines = () => {
 		try {
+			this.operationalBudgetLines = [];
 			const operationalBudgetLinesBY = this.allOperationalBudgetLines.filter(bl => bl.cb5__CBBudgetYear__c === this.selectedBYId);
 			if (operationalBudgetLinesBY.length === 0) return null;
 			const totalLine = {
@@ -220,7 +225,6 @@ export default class CBFundBudget extends LightningElement {
 				});
 			});
 			this.operationalBudgetLines = [totalLine, ...operationalBudgetLinesBY];
-			console.log(JSON.stringify(this.operationalBudgetLines));
 		} catch (e) {
 			_message('error', 'Generate Operational Budget Lines Error : ' + e);
 		}
@@ -271,6 +275,7 @@ export default class CBFundBudget extends LightningElement {
 	handleFilter = async (event) => {
 		this.selectedBYId = event.target.value;
 		this.separateGrantBudgetLines();
+		this.separateOperationalBudgetLines();
 		this.generateCommittedBudgetLine();
 		this.calculateBalanceAmounts();
 	};
@@ -312,6 +317,36 @@ export default class CBFundBudget extends LightningElement {
 		}
 	};
 	///////////////// HANDLERS /////////////////////
+
+	redirectToBLM = async () => {
+		const CBFundId = await getCBFundIdFromOppFundIdServer({oppId: this.recordId});
+		if (!CBFundId) {
+			_message('info', 'Something wrong');
+			return null;
+		}
+		this[NavigationMixin.Navigate]({
+			type: 'standard__navItemPage',
+			attributes: {
+				apiName: 'cb5__Budget_Lines'
+			},
+			state: {
+				cb5_CBYear__c: this.selectedBYId,
+				cb5_CBVariable1__c: CBFundId
+			}
+		});
+
+	};
+
+	redirectToFund = (event) => {
+		this[NavigationMixin.Navigate]({
+			type: 'standard__recordPage',
+			attributes: {
+				recordId: event.target.name,
+				objectApiName: 'Opportunity',
+				actionName: 'view'
+			}
+		});
+	}
 
 
 }

@@ -26,6 +26,12 @@
 										  onclick={connectedCallback}></lightning-button>
 					</div>
 				</lightning-layout-item>
+				<lightning-layout-item>
+					<div class="slds-p-top_large">
+						<lightning-button label="BLM" icon-name="utility:link" title="Redirect to Budget Line Manager"
+										  onclick={redirectToBLM}></lightning-button>
+					</div>
+				</lightning-layout-item>
 			</template>
 			<template lwc:else>
 				<lightning-layout-item>
@@ -43,7 +49,7 @@
 				<lightning-layout-item size="2">
 					<lightning-input value={fundPlanLine.Name} label="Label" disabled></lightning-input>
 				</lightning-layout-item>
-				<lightning-layout-item size="9">
+				<lightning-layout-item size="8">
 					<lightning-layout horizontal-align="space">
 						<template for:each={fundPlanLine.cb5__CBAmounts__r} for:item="amount">
 
@@ -58,7 +64,7 @@
 						</template>
 					</lightning-layout>
 				</lightning-layout-item>
-				<lightning-layout-item size="1">
+				<lightning-layout-item size="2">
 					<lightning-input type='number' label="Total" value={fundPlanLine.total} formatter="currency"
 									 class="dec totalValue"
 									 disabled></lightning-input>
@@ -73,7 +79,7 @@
 					<lightning-input value={fundBalanceLine.Name} label="Label" disabled
 									 variant="label-hidden"></lightning-input>
 				</lightning-layout-item>
-				<lightning-layout-item size="9">
+				<lightning-layout-item size="8">
 					<lightning-layout horizontal-align="space">
 						<template for:each={fundBalanceLine.cb5__CBAmounts__r} for:item="amount">
 
@@ -96,7 +102,7 @@
 						</template>
 					</lightning-layout>
 				</lightning-layout-item>
-				<lightning-layout-item size="1">
+				<lightning-layout-item size="2">
 
 				</lightning-layout-item>
 
@@ -105,14 +111,15 @@
 
 			<!-- GRANT ALLOCATION  -->
 			<template lwc:if={renderGrantAllocationTable}>
-				GRANT ALLOCATION
+				BUDGET ALLOCATION
 				<template for:each={grantBudgetLines} for:item="bl">
 					<lightning-layout key={bl}>
 						<lightning-layout-item size="2">
-							<lightning-input value={bl.Name} label="Label" disabled class={bl.styleClassText}
+							<lightning-input value={bl.Name} label="Label" disabled class={bl.styleClassText} ondblclick={redirectToFund}
+											 name={bl.id}
 											 variant="label-hidden"></lightning-input>
 						</lightning-layout-item>
-						<lightning-layout-item size="9">
+						<lightning-layout-item size="8">
 							<lightning-layout horizontal-align="space">
 								<template for:each={bl.cb5__CBAmounts__r} for:item="amount">
 
@@ -126,7 +133,7 @@
 								</template>
 							</lightning-layout>
 						</lightning-layout-item>
-						<lightning-layout-item size="1">
+						<lightning-layout-item size="2">
 							<lightning-input type='number' label="Total" value={bl.cb5__Value__c} formatter="currency"
 											 variant="label-hidden"
 											 class={bl.styleClassNumber}

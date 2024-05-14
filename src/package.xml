@@ -3,19 +3,89 @@
     <types>
         <members>CBGMConst</members>
         <members>CBGMFundBalanceBatch</members>
+        <members>CBGMFundBalanceProcess</members>
         <members>CBGMFundBalanceService</members>
         <members>CBGMFundPageController</members>
         <members>CBGMGrantPageController</members>
+        <members>CBGMInitController</members>
         <members>CBGMLockBudgetAction</members>
         <members>CBGMOpportunityDomain</members>
         <members>CBGMTest</members>
         <members>CBGMUnlockBudgetAction</members>
         <members>CBGMWarningsService</members>
+        <members>ChangePasswordController</members>
+        <members>ChangePasswordControllerTest</members>
+        <members>CommunitiesLandingController</members>
+        <members>CommunitiesLandingControllerTest</members>
+        <members>CommunitiesLoginController</members>
+        <members>CommunitiesLoginControllerTest</members>
+        <members>CommunitiesSelfRegConfirmController</members>
+        <members>CommunitiesSelfRegConfirmControllerTest</members>
+        <members>CommunitiesSelfRegController</members>
+        <members>CommunitiesSelfRegControllerTest</members>
+        <members>ForgotPasswordController</members>
+        <members>ForgotPasswordControllerTest</members>
+        <members>LightningForgotPasswordController</members>
+        <members>LightningForgotPasswordControllerTest</members>
+        <members>LightningLoginFormController</members>
+        <members>LightningLoginFormControllerTest</members>
+        <members>LightningSelfRegisterController</members>
+        <members>LightningSelfRegisterControllerTest</members>
+        <members>MicrobatchSelfRegController</members>
+        <members>MicrobatchSelfRegControllerTest</members>
+        <members>MyProfilePageController</members>
+        <members>MyProfilePageControllerTest</members>
+        <members>SiteLoginController</members>
+        <members>SiteLoginControllerTest</members>
+        <members>SiteRegisterController</members>
+        <members>SiteRegisterControllerTest</members>
         <name>ApexClass</name>
     </types>
     <types>
+        <members>SiteFooter</members>
+        <members>SiteHeader</members>
+        <members>SiteLogin</members>
+        <members>SitePoweredBy</members>
+        <name>ApexComponent</name>
+    </types>
+    <types>
+        <members>AnswersHome</members>
+        <members>BandwidthExceeded</members>
+        <members>ChangePassword</members>
+        <members>CommunitiesLanding</members>
+        <members>CommunitiesLogin</members>
+        <members>CommunitiesSelfReg</members>
+        <members>CommunitiesSelfRegConfirm</members>
+        <members>CommunitiesTemplate</members>
+        <members>Exception</members>
+        <members>FileNotFound</members>
+        <members>ForgotPassword</members>
+        <members>ForgotPasswordConfirm</members>
+        <members>IdeasHome</members>
+        <members>InMaintenance</members>
+        <members>MicrobatchSelfReg</members>
+        <members>MyProfilePage</members>
+        <members>SiteLogin</members>
+        <members>SiteRegister</members>
+        <members>SiteRegisterConfirm</members>
+        <members>SiteTemplate</members>
+        <members>StdExceptionTemplate</members>
+        <members>Unauthorized</members>
+        <members>UnderConstruction</members>
+        <name>ApexPage</name>
+    </types>
+    <types>
+        <members>CBGMInvoiceTrigger</members>
         <members>CBGMOpportunityTrigger</members>
         <name>ApexTrigger</name>
+    </types>
+    <types>
+        <members>forgotPassword</members>
+        <members>loginForm</members>
+        <members>selfRegister</members>
+        <members>setExpId</members>
+        <members>setStartUrl</members>
+        <name>AuraDefinitionBundle</name>
     </types>
     <types>
         <members>Account.Active__c</members>
@@ -422,6 +492,7 @@
         <members>Asset</members>
         <members>Campaign</members>
         <members>Case</members>
+        <members>CaseComment</members>
         <members>Contact</members>
         <members>Contract</members>
         <members>Lead</members>
@@ -476,13 +547,18 @@
         <name>CustomObject</name>
     </types>
     <types>
+        <members>CB_Invoice_Record_Page1</members>
+        <members>CloudBudget3_0_GM_UtilityBar</members>
         <members>ContactCenter_UtilityBar</members>
+        <members>Contract_Record_Page</members>
         <members>CrisisCenter_UtilityBar</members>
         <members>LightningSalesConsole_UtilityBar</members>
         <members>LightningSales_UtilityBar</members>
         <members>LightningService_UtilityBar</members>
         <members>Opportunity_Record_Page</members>
         <members>Opportunity_Record_Page1</members>
+        <members>Opportunity_Record_Page2</members>
+        <members>Opportunity_Record_Page3</members>
         <members>RevenueCloudConsole_UtilityBar</members>
         <name>FlexiPage</name>
     </types>
@@ -496,6 +572,7 @@
         <members>Account-Account %28Sales%29 Layout</members>
         <members>Account-Account %28Support%29 Layout</members>
         <members>Account-Account Layout</members>
+        <members>AccountBrand-Account Brand Layout</members>
         <members>AlternativePaymentMethod-Alternative Payment Method Layout</members>
         <members>ApiAnomalyEventStore-API Anomaly Event Store Layout</members>
         <members>AppointmentInvitation-Appointment Invitation Layout</members>
@@ -505,6 +582,8 @@
         <members>AssetRelationship-Asset Relationship Layout</members>
         <members>AssetStatePeriod-Asset State Period Layout</members>
         <members>AssignedResource-Assigned Resource Layout</members>
+        <members>AssociatedLocation-Associated Location Layout</members>
+        <members>AsyncOperationLog-Async Operation Log Layout</members>
         <members>AuthorizationForm-Authorization Form Layout</members>
         <members>AuthorizationFormConsent-Authorization Form Consent Layout</members>
         <members>AuthorizationFormDataUse-Authorization Form Data Use Layout</members>
@@ -537,7 +616,9 @@
         <members>ContactPointPhone-Contact Point Phone Layout</members>
         <members>ContactPointTypeConsent-Contact Point Type Consent Layout</members>
         <members>ContentVersion-Content Version Layout</members>
+        <members>Contract-Application</members>
         <members>Contract-Contract Layout</members>
+        <members>Contract-TDO</members>
         <members>ContractLineItem-Contract Line Item Layout</members>
         <members>CredentialStuffingEventStore-Credential Stuffing Event Store Layout</members>
         <members>CreditMemo-Credit Memo Layout</members>
@@ -547,6 +628,7 @@
         <members>DandBCompany-D%26B Company Layout</members>
         <members>DataUseLegalBasis-Data Use Legal Basis Layout</members>
         <members>DataUsePurpose-Data Use Purpose Layout</members>
+        <members>DelegatedAccount-External Managed Account Layout</members>
         <members>DigitalWallet-Digital Wallet Layout</members>
         <members>DuplicateRecordSet-Duplicate Record Set Layout</members>
         <members>EmailMessage-Email Message Layout</members>
@@ -557,6 +639,10 @@
         <members>FeedItem-Feed Item Layout</members>
         <members>FinanceBalanceSnapshot-Finance Balance Snapshot Layout</members>
         <members>FinanceTransaction-Finance Transaction Layout</members>
+        <members>FulfillmentOrder-Fulfillment Order Layout</members>
+        <members>FulfillmentOrderItemAdjustment-Fulfillment Order Item Adjustment Layout</members>
+        <members>FulfillmentOrderItemTax-Fulfillment Order Item Tax Layout</members>
+        <members>FulfillmentOrderLineItem-Fulfillment Order Product Layout</members>
         <members>Global-Global Layout</members>
         <members>Idea-Idea Layout</members>
         <members>Individual-Individual Layout</members>
@@ -567,6 +653,9 @@
         <members>Lead-Lead %28Support%29 Layout</members>
         <members>Lead-Lead Layout</members>
         <members>LegalEntity-Legal Entity Layout</members>
+        <members>Location-Location Layout</members>
+        <members>LocationGroup-Location Group Layout</members>
+        <members>LocationGroupAssignment-Location Group Assignment Layout</members>
         <members>Macro-Macro Layout</members>
         <members>OperatingHours-Operating Hours Layout</members>
         <members>Opportunity-Fund</members>
@@ -629,6 +718,7 @@
         <members>WebCartAdjustmentBasis-Cart Adjustment Basis Layout</members>
         <members>WebCartAdjustmentGroup-Cart Adjustment Group Layout</members>
         <members>WebStore-Store Layout</members>
+        <members>WebStoreConfig-Web Store Configuration Layout</members>
         <members>WorkOrder-Work Order Layout</members>
         <members>WorkOrderLineItem-Work Order Line Item Layout</members>
         <members>WorkPlan-Work Plan Layout</members>
@@ -887,6 +977,10 @@
         <members>cb5__CBVariable5__c.cb5__All</members>
         <members>cb5__CBWelcome__c.cb5__All</members>
         <name>ListView</name>
+    </types>
+    <types>
+        <members>SiteSamples</members>
+        <name>StaticResource</name>
     </types>
     <version>48.0</version>
 </Package>

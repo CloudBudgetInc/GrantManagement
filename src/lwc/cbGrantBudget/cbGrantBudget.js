@@ -30,19 +30,26 @@ import saveGrantAmountServer from '@salesforce/apex/CBGMGrantPageController.save
 import saveGrantBudgetLineServer from '@salesforce/apex/CBGMGrantPageController.saveGrantBudgetLineServer';
 import isManagerServer from '@salesforce/apex/CBGMGrantPageController.isManagerServer';
 import addBudgetLineServer from '@salesforce/apex/CBGMGrantPageController.addBudgetLineServer';
+import getOrgVariableServer from '@salesforce/apex/CBGMGrantPageController.getOrgVariableServer';
 import swapContractToOpportunityServer from '@salesforce/apex/CBGMGrantPageController.swapContractToOpportunityServer';
+import getCBGrantIdFromOppGrantIdServer
+	from '@salesforce/apex/CBGMGrantPageController.getCBGrantIdFromOppGrantIdServer';
 import recalculateOpportunityAmountServer
 	from '@salesforce/apex/CBGMGrantPageController.recalculateOpportunityAmountServer';
 import {_applyDecStyle, _getCopy, _getSOFromObject, _message, _parseServerError} from "c/cbUtils";
 
+import {NavigationMixin} from 'lightning/navigation';
 
-export default class CBFundBudget extends LightningElement {
+
+export default class CBFundBudget extends NavigationMixin(LightningElement) {
 
 	@api recordId;
 	@track showSpinner = false;
+	@track orgVariable = {};
 	@track allYearBudgetLines = [];
 	@track totalLine = {grantTotal: 0};
 	@track budgetLines = [];
+	@track groupedBudgetLines = [];
 	@track selectedBYId;
 	@track budgetYearSO = [];
 	@track fundSO = [];
@@ -66,6 +73,7 @@ export default class CBFundBudget extends LightningElement {
 		this.allYearBudgetLines = [];
 		_applyDecStyle();
 		this.showSpinner = true;
+		await this.getOrgVariable();
 		await this.swapContractToOpportunity();
 		await this.isUserGMManager();
 		await this.getAnalytics();
@@ -74,10 +82,12 @@ export default class CBFundBudget extends LightningElement {
 		this.showSpinner = false;
 	};
 
+	getOrgVariable = async () => {
+		this.orgVariable = await getOrgVariableServer().catch(e => _parseServerError('Get Org Variable Error : ', e))
+	};
+
 	swapContractToOpportunity = async () => {
-		console.log('OLD Record Id = ' + this.recordId);
 		this.recordId = await swapContractToOpportunityServer({contractOppId: this.recordId}).catch(e => _parseServerError('Swap ID Error' + e));
-		console.log('NEW Record Id = ' + this.recordId);
 	};
 
 	getAnalytics = async () => {
@@ -118,16 +128,53 @@ export default class CBFundBudget extends LightningElement {
 			if (!this.selectedBYId) this.selectedBYId = this.allYearBudgetLines[0].cb5__CBBudgetYear__c;
 			this.budgetLines = this.allYearBudgetLines.filter(bl => bl.cb5__CBBudgetYear__c === this.selectedBYId);
 			this.budgetLines.forEach(bl => bl.cb5__Value__c = 0);
-			this.recalculateTotalLineAndGlobalTotal();
 			this.budgetLines = _getCopy(this.budgetLines);
+			this.groupBudgetLines();
+			this.recalculateTotalLineAndGlobalTotal();
 			this.showTable = true;
 		} catch (e) {
 			_message('error', 'Prepare Table Error : ' + e);
 		}
 	};
 
+	groupBudgetLines = () => {
+		try {
+			console.log('this.orgVariable = ' + JSON.stringify(this.orgVariable));
+			console.log('this.orgVariable = ' + JSON.stringify(this.orgVariable));
+			if (!this.budgetLines?.length) return null;
+			if (!this.orgVariable?.cb5gm__GMGrantGrouping__c) {
+				this.orgVariable = {cb5gm__GMGrantGrouping__c: 'singleGroup'};
+			}
+			const BLGroups = {};
+			const defaultGroupName = 'Other';
+			const fields = this.orgVariable.cb5gm__GMGrantGrouping__c.split('.');
+			console.log('FIELDS: ' + fields);
+			this.budgetLines.forEach(bl => {
+				let key = fields.length === 1 ? bl[fields[0]] : bl[fields[0]]?.[fields[1]];
+				console.log('KEY: ' + key);
+				key = key ? key : defaultGroupName;
+				let BLArray = BLGroups[key];
+				if (!BLArray) {
+					BLArray = [];
+					BLGroups[key] = BLArray;
+				}
+				BLArray.push(bl);
+			});
+			this.groupedBudgetLines = Object.keys(BLGroups).reduce((r, key) => {
+				r.push({
+					groupName: key,
+					budgetLines: BLGroups[key]
+				});
+				return r;
+			}, []);
+			if (this.groupedBudgetLines.length === 1) this.groupedBudgetLines[0].groupName = '';
+		} catch (e) {
+			_message('error', 'Group Budget Lines Error ' + e);
+		}
+	};
+
 	recalculateOpportunityAmount = () => {
-		recalculateOpportunityAmountServer({'oppId': this.recordId}).catch(e => _message('error', 'Recalculate Opp Amount Error: ' + e));
+		recalculateOpportunityAmountServer({'oppId': this.recordId}).catch(e => _parseServerError('Recalculate Opportunity Amount Error: ', e));
 	};
 
 	recalculateTotalLineAndGlobalTotal = () => {
@@ -137,6 +184,9 @@ export default class CBFundBudget extends LightningElement {
 			if (!this.budgetLines || this.budgetLines.length === 0) return null;
 			this.budgetLines.forEach(bl => bl.cb5__CBAmounts__r.forEach(amount => bl.cb5__Value__c += +amount.cb5__Value__c));
 			this.allYearBudgetLines.forEach(bl => bl.cb5__CBAmounts__r.forEach(amount => grantTotal += +amount.cb5__Value__c));
+			this.budgetLines = this.groupedBudgetLines.reduce((r, group) => {
+				return [...r, ...group.budgetLines];
+			}, []);
 			this.totalLine = this.budgetLines.reduce((r, bl) => {
 				r.cb5__Value__c += +bl.cb5__Value__c;
 				bl.cb5__CBAmounts__r.forEach((amount, i) => {
@@ -246,6 +296,25 @@ export default class CBFundBudget extends LightningElement {
 	closeBudgetLine = () => {
 		this.budgetLineId = undefined;
 		this.connectedCallback();
+	};
+
+	redirectToBLM = async () => {
+		const CBGrantId = await getCBGrantIdFromOppGrantIdServer({oppId: this.recordId});
+		if (!CBGrantId) {
+			_message('info', 'Something wrong');
+			return null;
+		}
+		this[NavigationMixin.Navigate]({
+			type: 'standard__navItemPage',
+			attributes: {
+				apiName: 'cb5__Budget_Lines'
+			},
+			state: {
+				cb5_CBYear__c: this.selectedBYId,
+				cb5_CBVariable2__c: CBGrantId
+			}
+		});
+
 	};
 
 	constructor() {

@@ -29,7 +29,7 @@ public with sharing class CBGMConst {
 
 	public static final String BASE_SCENARIO_NAME = 'Base';
 	public static final String BALANCE_FUND_SCENARIO_NAME = 'Fund Balance';
-
+	
 	public static final String DEFAULT_FUNDING_ACCOUNT_NAME = 'Funding';
 	public static final String DEFAULT_GRANT_ACCOUNT_NAME = 'Grant';
 

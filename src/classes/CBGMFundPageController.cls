@@ -49,7 +49,7 @@ public with sharing class CBGMFundPageController {
 				FROM cb5__CBBudgetLine__c
 				WHERE cb5__CBScenario__r.Name = :CBGMConst.BASE_SCENARIO_NAME
 				AND cb5__CBVariable1__r.cb5__ExtId__c = :oppId
-				AND cb5__CBSubAccountName__c = 'Fund'
+				AND cb5gm__AccountApplicableFor__c = 'Fund'
 				ORDER BY cb5__CBBudgetYear__r.Name
 		];
 	}
@@ -92,14 +92,15 @@ public with sharing class CBGMFundPageController {
 	@AuraEnabled
 	public static List<cb5__CBBudgetLine__c> getAllocationGrantsServer(String oppId) {
 		return [
-				SELECT Id, Name, cb5__CBVariable1__c, cb5__CBVariable2__c, cb5__CBVariable2__r.Name, cb5__CBBudgetYear__r.Name, cb5__CBBudgetYear__c, cb5__Value__c, (
+				SELECT Id, Name,cb5__CBVariable1__c,cb5__CBVariable2__c,cb5__CBVariable2__r.Name,cb5__CBBudgetYear__r.Name,cb5__CBBudgetYear__c,cb5__Value__c,
+						cb5__CBVariable2__r.cb5__ExtId__c, (
 						SELECT Id, cb5__Value__c, cb5__CBPeriod__c, cb5__CBPeriod__r.cb5__CBBudgetYear__r.Name, cb5__CBPeriod__r.Name
 						FROM cb5__CBAmounts__r
 						ORDER BY cb5__CBPeriod__r.cb5__Start__c
 				)
 				FROM cb5__CBBudgetLine__c
 				WHERE cb5__CBScenario__r.Name = :CBGMConst.BASE_SCENARIO_NAME
-				AND cb5__CBSubAccountName__c != 'Fund'
+				AND cb5gm__AccountApplicableFor__c != 'Fund'
 				AND cb5__CBVariable2__c != null
 				AND cb5__CBVariable1__r.cb5__ExtId__c = :oppId
 				ORDER BY cb5__CBBudgetYear__r.Name
@@ -116,7 +117,7 @@ public with sharing class CBGMFundPageController {
 				)
 				FROM cb5__CBBudgetLine__c
 				WHERE cb5__CBScenario__r.Name = :CBGMConst.BASE_SCENARIO_NAME
-				AND cb5__CBSubAccountName__c != 'Fund'
+				AND cb5gm__AccountApplicableFor__c != 'Fund'
 				AND cb5__CBVariable2__c = null
 				AND cb5__CBVariable1__r.cb5__ExtId__c = :oppId
 				ORDER BY cb5__CBBudgetYear__r.Name
@@ -152,11 +153,19 @@ public with sharing class CBGMFundPageController {
 				SELECT Id,Name,cb5__CBVariable1__c, (SELECT cb5__CBPeriod__c, cb5__Value__c FROM cb5__CBAmounts__r ORDER BY cb5__CBPeriod__r.cb5__Start__c)
 				FROM cb5__CBBudgetLine__c
 				WHERE cb5__CBVariable1__c IN:new Set<String>(availableFundIds) AND cb5__CBBudgetYear__c = :grantBudgetLine.cb5__CBBudgetYear__c
-				AND cb5__CBScenario__r.Name = :CBGMConst.BASE_SCENARIO_NAME AND cb5__CBSubAccountName__c = 'Fund'
+				AND cb5__CBScenario__r.Name = :CBGMConst.BALANCE_FUND_SCENARIO_NAME
 				ORDER BY Name
 		]);
 		return r;
+	}
 
+	@AuraEnabled
+	public static String getCBFundIdFromOppFundIdServer(String oppId) {
+		try {
+			return [SELECT Id FROM cb5__CBVariable1__c WHERE cb5__ExtId__c = :oppId LIMIT 1][0].Id;
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 

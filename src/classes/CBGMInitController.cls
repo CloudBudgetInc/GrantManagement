@@ -71,8 +71,8 @@ global with sharing class CBGMInitController {
 		insert subTypes;
 
 		List<cb5__CBAccount__c> accounts = new List<cb5__CBAccount__c>();
-		cb5__CBAccount__c fundAccount = new cb5__CBAccount__c(Name = CBGMConst.DEFAULT_FUNDING_ACCOUNT_NAME, cb5__CBAccountType__c = accType.Id, cb5__CBSubAccount__c = fundSubAccType.Id);
-		cb5__CBAccount__c grantAccount = new cb5__CBAccount__c(Name = CBGMConst.DEFAULT_GRANT_ACCOUNT_NAME, cb5__CBAccountType__c = accType.Id, cb5__CBSubAccount__c = grantSubAccType.Id);
+		cb5__CBAccount__c fundAccount = new cb5__CBAccount__c(Name = CBGMConst.DEFAULT_FUNDING_ACCOUNT_NAME, cb5gm__ApplicableFor__c = 'Fund', cb5__CBAccountType__c = accType.Id, cb5__CBSubAccount__c = fundSubAccType.Id);
+		cb5__CBAccount__c grantAccount = new cb5__CBAccount__c(Name = CBGMConst.DEFAULT_GRANT_ACCOUNT_NAME, cb5gm__ApplicableFor__c = 'Grant', cb5__CBAccountType__c = accType.Id, cb5__CBSubAccount__c = grantSubAccType.Id);
 		accounts.add(fundAccount);
 		accounts.add(grantAccount);
 		insert accounts;

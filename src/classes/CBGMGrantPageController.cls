@@ -74,7 +74,10 @@ public with sharing class CBGMGrantPageController {
 	@AuraEnabled
 	public static List<cb5__CBBudgetLine__c> getGrantBudgetLinesServer(String oppId) {
 		return [
-				SELECT Id, Name, cb5__CBVariable1__c,cb5__CBBudgetYear__r.Name,cb5__CBBudgetYear__c,cb5__Value__c, cb5__Lock__c, (
+				SELECT Id,Name,cb5__CBSubAccountName__c,cb5__CBDivision__r.Name,
+						cb5__CBVariable1__c,cb5__CBVariable2__c,cb5__CBVariable3__c,cb5__CBVariable4__c,cb5__CBVariable5__c,
+						cb5__CBVariable1__r.Name,cb5__CBVariable2__r.Name,cb5__CBVariable3__r.Name,cb5__CBVariable4__r.Name,cb5__CBVariable5__r.Name,
+						cb5__CBBudgetYear__r.Name,cb5__CBBudgetYear__c,cb5__Value__c,cb5__Lock__c,cb5__Description__c, (
 						SELECT Id, cb5__Value__c, cb5__CBPeriod__c, cb5__CBPeriod__r.cb5__CBBudgetYear__r.Name, cb5__CBPeriod__r.Name
 						FROM cb5__CBAmounts__r
 						ORDER BY cb5__CBPeriod__r.cb5__Start__c
@@ -138,5 +141,20 @@ public with sharing class CBGMGrantPageController {
 		}
 		return false;
 	}
+
+	@AuraEnabled
+	public static String getCBGrantIdFromOppGrantIdServer(String oppId) {
+		try {
+			return [SELECT Id FROM cb5__CBVariable2__c WHERE cb5__ExtId__c = :oppId LIMIT 1][0].Id;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	@AuraEnabled
+	public static cb5__CBOrgVariable__c getOrgVariableServer() {
+		return [SELECT cb5gm__GMGrantGrouping__c FROM cb5__CBOrgVariable__c LIMIT 1][0];
+	}
+
 
 }

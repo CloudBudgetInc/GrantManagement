@@ -8,6 +8,7 @@
         <target>lightning__RecordAction</target>
         <target>lightning__RecordPage</target>
         <target>lightning__FlowScreen</target>
+        <target>lightningCommunity__Page</target>
     </targets>
     <targetConfigs>
         <targetConfig targets="lightning__RecordAction">

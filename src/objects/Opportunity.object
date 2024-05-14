@@ -220,6 +220,7 @@
     <fields>
         <fullName>AmountAppliedFor__c</fullName>
         <defaultValue>0</defaultValue>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>Amount Applied For</label>
         <precision>18</precision>
@@ -232,6 +233,7 @@
     <fields>
         <fullName>AmountCommitted__c</fullName>
         <defaultValue>0</defaultValue>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>Amount Committed</label>
         <precision>18</precision>
@@ -244,6 +246,7 @@
     <fields>
         <fullName>AmountPaid__c</fullName>
         <defaultValue>0</defaultValue>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>Amount Paid</label>
         <precision>18</precision>
@@ -256,6 +259,7 @@
     <fields>
         <fullName>BudgetYearType__c</fullName>
         <defaultValue>&apos;Company&apos;</defaultValue>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>Budget Year Type</label>
         <required>false</required>
@@ -287,6 +291,7 @@
     <fields>
         <fullName>CBAccount__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>CB Account</label>
         <referenceTo>cb5__CBAccount__c</referenceTo>
@@ -300,6 +305,7 @@
     <fields>
         <fullName>CBDivision__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>CB Division</label>
         <referenceTo>cb5__CBDivision__c</referenceTo>
@@ -339,8 +345,9 @@
     <fields>
         <fullName>CBVariable3__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
-        <label>CB Variable 3</label>
+        <label>Manager</label>
         <referenceTo>cb5__CBVariable3__c</referenceTo>
         <relationshipLabel>Opportunities</relationshipLabel>
         <relationshipName>Opportunities</relationshipName>
@@ -352,6 +359,7 @@
     <fields>
         <fullName>CBVariable4__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>CB Variable 4</label>
         <referenceTo>cb5__CBVariable4__c</referenceTo>
@@ -365,6 +373,7 @@
     <fields>
         <fullName>CBVariable5__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>CB Variable 5</label>
         <referenceTo>cb5__CBVariable5__c</referenceTo>
@@ -439,6 +448,7 @@
     </fields>
     <fields>
         <fullName>Destination__c</fullName>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>Destination</label>
         <required>false</required>
@@ -478,6 +488,11 @@
                     <fullName>Software</fullName>
                     <default>false</default>
                     <label>Software</label>
+                </value>
+                <value>
+                    <fullName>Fairs</fullName>
+                    <default>false</default>
+                    <label>Fairs</label>
                 </value>
             </valueSetDefinition>
         </valueSet>
@@ -541,6 +556,12 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>PartnerAccountId</fullName>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
         <fullName>Pricebook2Id</fullName>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
@@ -559,6 +580,7 @@
     <fields>
         <fullName>TotalFundAmount__c</fullName>
         <defaultValue>0</defaultValue>
+        <deprecated>false</deprecated>
         <externalId>false</externalId>
         <label>Total Fund Amount</label>
         <precision>18</precision>
@@ -598,34 +620,46 @@
     <listViews>
         <fullName>Funds</fullName>
         <columns>OPPORTUNITY.NAME</columns>
-        <columns>ACCOUNT.NAME</columns>
-        <columns>OPPORTUNITY.AMOUNT</columns>
+        <columns>CBVariable3__c</columns>
+        <columns>AmountCommitted__c</columns>
+        <columns>AmountAppliedFor__c</columns>
+        <columns>AmountPaid__c</columns>
+        <columns>OPPORTUNITY.EXP_AMOUNT</columns>
         <columns>OPPORTUNITY.CLOSE_DATE</columns>
         <columns>OPPORTUNITY.STAGE_NAME</columns>
-        <columns>CORE.USERS.ALIAS</columns>
+        <columns>Destination__c</columns>
         <filterScope>Everything</filterScope>
         <filters>
             <field>OPPORTUNITY.RECORDTYPE</field>
             <operation>equals</operation>
             <value>Opportunity.Fund</value>
         </filters>
-        <label>Funds</label>
+        <filters>
+            <field>OPPORTUNITY.NAME</field>
+            <operation>contains</operation>
+            <value>Budget</value>
+        </filters>
+        <label>Budgets</label>
     </listViews>
     <listViews>
         <fullName>Grants</fullName>
         <columns>OPPORTUNITY.NAME</columns>
-        <columns>ACCOUNT.NAME</columns>
+        <columns>CBVariable3__c</columns>
+        <columns>CBDivision__c</columns>
         <columns>OPPORTUNITY.AMOUNT</columns>
+        <columns>AmountPaid__c</columns>
         <columns>OPPORTUNITY.CLOSE_DATE</columns>
-        <columns>OPPORTUNITY.STAGE_NAME</columns>
-        <columns>CORE.USERS.ALIAS</columns>
         <filterScope>Everything</filterScope>
         <filters>
             <field>OPPORTUNITY.RECORDTYPE</field>
             <operation>equals</operation>
             <value>Opportunity.Grant</value>
         </filters>
-        <label>Grants</label>
+        <filters>
+            <field>CBVariable3__c</field>
+            <operation>notEqual</operation>
+        </filters>
+        <label>Fairs</label>
     </listViews>
     <recordTypeTrackFeedHistory>false</recordTypeTrackFeedHistory>
     <recordTypes>
@@ -680,6 +714,10 @@
             </values>
             <values>
                 <fullName>Equipment</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Fairs</fullName>
                 <default>false</default>
             </values>
             <values>
@@ -817,6 +855,10 @@
             </values>
             <values>
                 <fullName>Equipment</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Fairs</fullName>
                 <default>false</default>
             </values>
             <values>

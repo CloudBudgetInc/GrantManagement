@@ -24,6 +24,7 @@ trigger CBGMInvoiceTrigger on cb5__CBInvoice__c (after insert, after update) {
 			for (cb5__CBVariable2__c var2 : [SELECT Id, cb5__ExtId__c FROM cb5__CBVariable2__c WHERE ID IN:var2Ids]) varMap.put(var2.Id, var2.cb5__ExtId__c);
 		}
 		if (varMap.size() == 0) return ;
+
 		invoices = [SELECT Id, cb5__CBVariable1__c, cb5__CBVariable2__c FROM cb5__CBInvoice__c WHERE Id IN:invoicesIdsToUpsert];
 		for (cb5__CBInvoice__c inv : invoices) {
 			if (inv.cb5__CBVariable1__c != null) inv.Opportunity__c = varMap.get(inv.cb5__CBVariable1__c);
